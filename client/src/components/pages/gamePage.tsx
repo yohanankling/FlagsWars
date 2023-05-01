@@ -1,43 +1,121 @@
 import react, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { send } from '../../services/httpContext';
 import { ref, onValue } from 'firebase/database';
 import { realTimeDb, auth } from '../../firebase/firebase';
 import classNames from 'classnames';
 import '../../css/game.css';
 import {
-  Board,
   Cell,
   Entity,
-  GameManager,
-  IPiecesSetup,
   King,
   MarkerBoard,
-  Pawn,
   Position,
-  Team,
   color,
   entityType,
-  printType,
   team,
   GameManagerFactory,
 } from 'common';
+import {Child} from 'common/src/Entitys'
 import { move, setReady } from '../../services/onlineGameSerivce';
 
-const whitePawnImage = require('../../assets/whitePawn.png');
-const blackPawnImage = require('../../assets/blackPawn.png');
-const whiteKingImage = require('../../assets/whiteKing.png');
-const blackKingImage = require('../../assets/blackKing.png');
+const child_blue = require('../../assets/child_blue.png');
+const child_red = require('../../assets/child_red.png');
+const death_blue = require('../../assets/death_blue.png');
+const death_red = require('../../assets/death_red.png.png');
+const devil_blue = require('../../assets/devil_blue.png');
+const devil_red = require('../../assets/devil_red.png');
+const dworf_blue = require('../../assets/dworf_blue.png');
+const dworf_red = require('../../assets/dworf_red.png');
+const flag_blue = require('../../assets/flag_blue.png');
+const flag_red = require('../../assets/flag_red.png');
+const king_blue = require('../../assets/king_blue.png');
+const king_red = require('../../assets/king_red.png');
+const knight_blue = require('../../assets/knight_blue.png');
+const knight_red = require('../../assets/knight_red.png');
+const mommy_blue = require('../../assets/mommy_blue.png');
+const mommy_red = require('../../assets/mommy_red.png');
+const ninja_blue = require('../../assets/ninja_blue.png');
+const ninja_red = require('../../assets/ninja_red.png');
+const ninja_blue_2 = require('../../assets/ninja_blue_2.png');
+const ninja_red_2 = require('../../assets/ninja_red_2.png');
+const odin_blue = require('../../assets/odin_blue.png');
+const odin_red = require('../../assets/odin_red.png');
+const thor_blue = require('../../assets/thor_blue.png');
+const thor_red = require('../../assets/thor_red.png');
+const troll_blue = require('../../assets/troll_blue.png');
+const troll_red = require('../../assets/troll_red.png');
+const vampire_blue = require('../../assets/vampire_blue.png');
+const vampire_red = require('../../assets/vampire_red.png');
+const viking_blue = require('../../assets/viking_blue.png');
+const viking_red = require('../../assets/viking_red.png');
+const wizard_blue = require('../../assets/wizard_blue.png');
+const wizard_red = require('../../assets/wizard_red.png');
 const eyeImage = require('../../assets/eye.jpg');
 
-// this is a ugly hack to inject the images to the imported common project
-Pawn.getImage = function (entity) {
-  return entity.team === team.black ? blackPawnImage : whitePawnImage;
+Child.getImage = function (entity) {
+  return entity.team === team.blue ? child_blue : child_red;
+};
+
+Death.getImage = function (entity) {
+  return entity.team === team.blue ? death_blue : death_red;
+};
+
+Devil.getImage = function (entity) {
+  return entity.team === team.blue ? devil_blue : devil_red;
+};
+
+Dworf.getImage = function (entity) {
+  return entity.team === team.blue ? dworf_blue : dworf_red;
+};
+
+Flag.getImage = function (entity) {
+  return entity.team === team.blue ? flag_blue : flag_red;
 };
 
 King.getImage = function (entity) {
-  return entity.team === team.black ? blackKingImage : whiteKingImage;
+  return entity.team === team.blue ? king_blue : king_red;
 };
+
+Knight.getImage = function (entity) {
+  return entity.team === team.blue ? knight_blue : knight_red;
+};
+
+Mommy.getImage = function (entity) {
+  return entity.team === team.blue ? mommy_blue : mommy_red;
+};
+
+Ninja.getImage = function (entity) {
+  return entity.team === team.blue ? ninja_blue : ninja_red;
+};
+
+Ninja2.getImage = function (entity) {
+  return entity.team === team.blue ? ninja_blue_2 : ninja_red_2;
+};
+
+Odin.getImage = function (entity) {
+  return entity.team === team.blue ? odin_blue : odin_red;
+};
+
+Thor.getImage = function (entity) {
+  return entity.team === team.blue ? thor_blue : thor_red;
+};
+
+Troll.getImage = function (entity) {
+  return entity.team === team.blue ? troll_blue : troll_red;
+};
+
+Vampire.getImage = function (entity) {
+  return entity.team === team.blue ? vampire_blue : vampire_red;
+};
+
+Vikink.getImage = function (entity) {
+  return entity.team === team.blue ? viking_blue : viking_red;
+};
+
+Wizard.getImage = function (entity) {
+  return entity.team === team.blue ? wizard_blue : wizard_red;
+};
+
 interface selectedEntity {
   x: number;
   y: number;
@@ -50,8 +128,8 @@ const GamePage = () => {
     player1: { id: string; team: team };
     player2: { id: string; team: team };
   }>({
-    player1: { id: '', team: team.black },
-    player2: { id: '', team: team.black },
+    player1: { id: '', team: team.blue },
+    player2: { id: '', team: team.red },
   });
   const [gameManager, setGameManager] = useState(GameManagerFactory.initGameManager());
   const [currentTeam, setCurrentTeam] = useState<team | null>();
@@ -70,7 +148,7 @@ const GamePage = () => {
     const starCountRef = ref(realTimeDb, 'games/' + id);
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
-      const gameDetails = { player1: data.player1, player2: data.player2, whitePlayer: data.white_player };
+      const gameDetails = { player1: data.player1, player2: data.player2, redPlayer: data.red_player };
       setGameDetails(gameDetails);
       setGameManager(GameManagerFactory.restoreGame(data.game_data));
       if (!initialLoad) setInitialLoad(true);
@@ -83,7 +161,22 @@ const GamePage = () => {
     }
 
     const currentTeamPiecesSetup = getTeam(currentTeam).piecesSetup;
-    const kingImage = currentTeam === team.white ? whiteKingImage : blackKingImage;
+    const childImage = currentTeam === team.blue ? child_blue : child_red;
+    const deathImage = currentTeam === team.blue ? death_blue : death_red;
+    const devilImage = currentTeam === team.blue ? devil_blue : devil_red;
+    const dworfImage = currentTeam === team.blue ? dworf_blue : dworf_red;
+    const flagImage = currentTeam === team.blue ? flag_blue : flag_red;
+    const kingImage = currentTeam === team.blue ? king_blue : king_blue;
+    const knightImage = currentTeam === team.blue ? knight_blue : knight_red;
+    const mommyImage = currentTeam === team.blue ? mommy_blue : mommy_red;
+    const ninjaImage = currentTeam === team.blue ? ninja_blue : ninja_red;
+    const ninja2Image = currentTeam === team.blue ? ninja_blue_2 : ninja_red_2;
+    const odinImage = currentTeam === team.blue ? odin_blue : odin_red;
+    const thorImage = currentTeam === team.blue ? thor_blue : thor_red;
+    const trollImage = currentTeam === team.blue ? troll_blue : troll_red;
+    const vampireImage = currentTeam === team.blue ? vampire_blue : vampire_red;
+    const vikingImage = currentTeam === team.blue ? viking_blue : viking_red;
+    const wizardImage = currentTeam === team.blue ? wizard_blue : wizard_red;
 
     let isFinished: boolean = true;
     for (const k in currentTeamPiecesSetup) {
@@ -131,10 +224,10 @@ const GamePage = () => {
   };
 
   const getTeam = (t: team) => {
-    if (t === team.black) {
-      return gameManager.blackTeam;
+    if (t === team.blue) {
+      return gameManager.blueTeam;
     } else {
-      return gameManager.whiteTeam;
+      return gameManager.redTeam;
     }
   };
 

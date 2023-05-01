@@ -2,19 +2,14 @@ import React, { useReducer, useState } from 'react';
 import classNames from 'classnames';
 import '../../css/game.css';
 import {
-  Board,
   Cell,
   Entity,
-  GameManager,
-  IPiecesSetup,
   King,
   MarkerBoard,
   Pawn,
-  Position,
   Team,
   color,
   entityType,
-  printType,
   team,
   GameManagerFactory,
 } from 'common';
@@ -25,7 +20,7 @@ const whiteKingImage = require('../../assets/whiteKing.png');
 const blackKingImage = require('../../assets/blackKing.png');
 const eyeImage = require('../../assets/eye.jpg');
 
-// this is a ugly hack to inject the images to the imported common project
+// this is an ugly hack to inject the images to the imported common project
 Pawn.getImage = function (entity) {
   return entity.team === team.black ? blackPawnImage : whitePawnImage;
 };

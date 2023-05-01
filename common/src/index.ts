@@ -1,9 +1,11 @@
+import {Child, Death, Devil, Dworf, Flag, King, Knight, Mommy, Ninja, Ninja2, Odin, Thor, Troll, Vampire, Viking, Wizard} from './Entitys';
 export enum team {
-  black,
-  white,
+  blue,
+  red,
 }
 
-export type entityType = 'pawn' | 'king';
+export type entityType = 'child' | 'death' | 'devil' | 'dworf' | 'flag' | 'king' | 'knight'
+  | 'mommy' | 'ninja' | 'ninja2' | 'odin' | 'thor' | 'troll' | 'vampire' | 'viking' | 'wizard';
 
 export enum printType {
   types,
@@ -33,7 +35,6 @@ export class Board {
   public getClone() {
     const clone = new Board();
     clone.board = [...this.board];
-
     return clone;
   }
 
@@ -138,28 +139,10 @@ export class Entity {
     this.isVisible = false;
   }
 
-  public getPossibleMoves?(x: number, y: number, board: Board): MarkerBoard;
-
-  protected isInsideBorders(x: number, y: number) {
-    return x >= 0 && x <= 7 && y >= 0 && y <= 7;
-  }
-
-  public effectOnEntity?(enemyEntity: Entity, board: Board): void;
-
-  public static getImage?(entity: Entity);
-}
-
-export class Pawn extends Entity {
-  constructor(team: team) {
-    super();
-    this.type = 'pawn';
-    this.team = team;
-  }
-
-  public override getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
+  public getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
     const markerBoard = new MarkerBoard();
     if (
-      this.team === team.black &&
+      this.team === team.blue &&
       this.isInsideBorders(x, y + 1) &&
       (board.getCell(x, y + 1).isEmpty() || board.getEntity(x, y + 1)?.team !== this.team)
     ) {
@@ -170,35 +153,17 @@ export class Pawn extends Entity {
     ) {
       markerBoard.setHighlight(x, y - 1);
     }
-
     return markerBoard;
   }
+  protected isInsideBorders(x: number, y: number) {
+    return x >= 0 && x <= 7 && y >= 0 && y <= 7;
+  }
 
-  public override effectOnEntity(enemyEntity: Entity, board: Board) {
+  public effectOnEntity(enemyEntity: Entity, board: Board) {
     enemyEntity.isVisible = true;
-    // if(enemyEntity.type === "bomb") {
-    //handle bomb
-    // }
+    this.isVisible = true;
   }
-}
-
-export class King extends Entity {
-  constructor(team: team) {
-    super();
-    this.type = 'king';
-    this.team = team;
-  }
-
-  public override getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
-    return new MarkerBoard();
-  }
-
-  public override effectOnEntity(entity: Entity, board: Board) {
-    entity.isVisible = true;
-    // if(enemyEntity.type === "bomb") {
-    //handle bomb
-    // }
-  }
+  public static getImage?(entity: Entity);
 }
 
 export type IPiecesSetup = {
@@ -226,8 +191,8 @@ export class Position {
 export class GameManager {
   public board: Board;
   public setupFinished: boolean;
-  public blackTeam: Team;
-  public whiteTeam: Team;
+  public blueTeam: Team;
+  public redTeam: Team;
   public teamTurn: Team;
   public turnCount: number;
 
@@ -238,12 +203,12 @@ export class GameManager {
     const t = entity.team;
     let currentTeam: Team;
     let allowedYColumn: number;
-    if (t === team.black) {
-      currentTeam = this.blackTeam;
-      allowedYColumn = this.blackTeam.FIRST_COLUMN;
+    if (t === team.blue) {
+      currentTeam = this.blueTeam;
+      allowedYColumn = this.blueTeam.FIRST_COLUMN;
     } else {
-      currentTeam = this.whiteTeam;
-      allowedYColumn = this.whiteTeam.FIRST_COLUMN;
+      currentTeam = this.redTeam;
+      allowedYColumn = this.redTeam.FIRST_COLUMN;
     }
 
     const leftSetupCount = currentTeam.piecesSetup[entity.type];
@@ -268,10 +233,10 @@ export class GameManager {
     const { x, y } = pos;
     const t = entity.team;
     let currentTeam: Team;
-    if (t === team.black) {
-      currentTeam = this.blackTeam;
+    if (t === team.blue) {
+      currentTeam = this.blueTeam;
     } else {
-      currentTeam = this.whiteTeam;
+      currentTeam = this.redTeam;
     }
 
     if (this.board.getCell(x, y).entity !== null) {
@@ -316,16 +281,16 @@ export class GameManager {
   public setReady(t: Team) {
     t.isReady = true;
 
-    if (this.blackTeam.isReady && this.whiteTeam.isReady) {
+    if (this.blueTeam.isReady && this.redTeam.isReady) {
       for (let i = 0; i < 8; i++) {
-        if (this.board.getCell(i, this.blackTeam.FIRST_COLUMN).entity == null) {
-          this.setPiece(new Pawn(team.black), { x: i, y: this.blackTeam.FIRST_COLUMN });
+        if (this.board.getCell(i, this.blueTeam.FIRST_COLUMN).entity == null) {
+          this.setPiece(new Child(team.blue), { x: i, y: this.blueTeam.FIRST_COLUMN });
         }
       }
 
       for (let i = 0; i < 8; i++) {
-        if (this.board.getCell(i, this.whiteTeam.FIRST_COLUMN).entity == null) {
-          this.setPiece(new Pawn(team.white), { x: i, y: this.whiteTeam.FIRST_COLUMN });
+        if (this.board.getCell(i, this.redTeam.FIRST_COLUMN).entity == null) {
+          this.setPiece(new Child(team.red), { x: i, y: this.redTeam.FIRST_COLUMN });
         }
       }
 
@@ -334,7 +299,7 @@ export class GameManager {
   }
 
   public getOppositeTeam(oppositeTeam: Team) {
-    return oppositeTeam.team === team.white ? this.blackTeam : this.whiteTeam;
+    return oppositeTeam.team === team.red ? this.blueTeam : this.redTeam;
   }
 
   public passTurn() {
@@ -350,8 +315,8 @@ export class GameManager {
 }
 
 export interface IGameManagerData {
-  whiteTeam: Team;
-  blackTeam: Team;
+  redTeam: Team;
+  blueTeam: Team;
   teamTurn: team;
   board: Cell[][];
   turnCount: number;
@@ -362,8 +327,8 @@ export class GameManagerFactory {
   public static getClone(gameManager: GameManager): GameManager {
     const clone = new GameManager();
 
-    clone.blackTeam = gameManager.blackTeam;
-    clone.whiteTeam = gameManager.whiteTeam;
+    clone.blueTeam = gameManager.blueTeam;
+    clone.redTeam = gameManager.redTeam;
     clone.board = gameManager.board;
     clone.setupFinished = gameManager.setupFinished;
     clone.turnCount = gameManager.turnCount;
@@ -375,20 +340,20 @@ export class GameManagerFactory {
     const instance = new GameManager();
     instance.board = new Board();
     instance.setupFinished = false;
-    instance.blackTeam = new Team(team.black, 0, 1);
-    instance.whiteTeam = new Team(team.white, 7, 6);
-    instance.blackTeam.piecesSetup = { king: 2, pawn: 0 };
-    instance.whiteTeam.piecesSetup = { king: 2, pawn: 0 };
+    instance.blueTeam = new Team(team.blue, 0, 1);
+    instance.redTeam = new Team(team.red, 7, 6);
+    instance.blueTeam.piecesSetup = { king: 2, child: 0 };
+    instance.redTeam.piecesSetup = { king: 2, child: 0 };
 
     instance.turnCount = 0;
-    instance.teamTurn = instance.whiteTeam;
+    instance.teamTurn = instance.redTeam;
 
     for (let i = 0; i < 8; i++) {
-      instance.board.getCell(i, 6).entity = new Pawn(team.white);
+      instance.board.getCell(i, 6).entity = new Child(team.red);
     }
 
     for (let i = 0; i < 8; i++) {
-      instance.board.getCell(i, 1).entity = new Pawn(team.black);
+      instance.board.getCell(i, 1).entity = new Child(team.blue);
     }
 
     return instance;
@@ -423,8 +388,8 @@ export class GameManagerFactory {
       case 'king':
         restored = new King(entity.team);
         break;
-      case 'pawn':
-        restored = new Pawn(entity.team);
+      case 'child':
+        restored = new Child(entity.team);
         break;
     }
 
@@ -433,25 +398,25 @@ export class GameManagerFactory {
   }
 
   public static restoreGame(data: IGameManagerData): GameManager {
-    const { board, setupFinished, teamTurn, turnCount, whiteTeam, blackTeam } = data;
+    const { board, setupFinished, teamTurn, turnCount, redTeam, blueTeam } = data;
     const instance = new GameManager(true);
 
-    instance.blackTeam = this.restoreTeam(blackTeam);
-    instance.whiteTeam = this.restoreTeam(whiteTeam);
+    instance.blueTeam = this.restoreTeam(blueTeam);
+    instance.redTeam = this.restoreTeam(redTeam);
     instance.board = this.restoreBoard(board);
     instance.setupFinished = setupFinished;
-    instance.teamTurn = whiteTeam.team === teamTurn ? instance.whiteTeam : instance.blackTeam;
+    instance.teamTurn = redTeam.team === teamTurn ? instance.redTeam : instance.blueTeam;
     instance.turnCount = turnCount;
 
     return instance;
   }
 
   public static getData(gameManager: GameManager): IGameManagerData {
-    const { blackTeam, board, setupFinished, teamTurn, turnCount, whiteTeam } = gameManager;
+    const { blueTeam, board, setupFinished, teamTurn, turnCount, redTeam } = gameManager;
 
     const data = {
-      whiteTeam: whiteTeam,
-      blackTeam: blackTeam,
+      redTeam: redTeam,
+      blueTeam: blueTeam,
       teamTurn: teamTurn.team,
       board: board.board,
       turnCount: turnCount,
