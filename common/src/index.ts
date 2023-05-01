@@ -342,8 +342,8 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    instance.blueTeam.piecesSetup = { king: 2, child: 0 };
-    instance.redTeam.piecesSetup = { king: 2, child: 0 };
+    instance.blueTeam.piecesSetup = { king: 1, death:1, devil: 1, dworf:1, flag: 1, knight:1, mommy: 1, ninja:1, ninja2: 1, odin:1, thor: 1, troll:1, vampire: 1, viking:1, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = { king: 1, death:1, devil: 1, dworf:1, flag: 1, knight:1, mommy: 1, ninja:1, ninja2: 1, odin:1, thor: 1, troll:1, vampire: 1, viking:1, wizard: 1, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;

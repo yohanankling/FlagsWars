@@ -7,7 +7,6 @@ import '../../css/game.css';
 import {
   Cell,
   Entity,
-  King,
   MarkerBoard,
   Position,
   color,
@@ -15,7 +14,7 @@ import {
   team,
   GameManagerFactory,
 } from 'common';
-import {Child} from 'common/src/Entitys'
+import {Child, Death, Devil, Dworf, Flag, King, Knight, Mommy, Ninja, Ninja2, Odin, Thor, Troll, Vampire, Viking, Wizard} from 'common/src/Entitys';
 import { move, setReady } from '../../services/onlineGameSerivce';
 
 const child_blue = require('../../assets/child_blue.png');
@@ -108,7 +107,7 @@ Vampire.getImage = function (entity) {
   return entity.team === team.blue ? vampire_blue : vampire_red;
 };
 
-Vikink.getImage = function (entity) {
+Viking.getImage = function (entity) {
   return entity.team === team.blue ? viking_blue : viking_red;
 };
 
