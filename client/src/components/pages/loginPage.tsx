@@ -1,15 +1,23 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import '../../css/LoginPage.css';
 import {
-    GoogleAuthProvider,
-    FacebookAuthProvider,
-} from 'firebase/auth'
+  GoogleAuthProvider,
+  FacebookAuthProvider, AuthProvider,
+} from 'firebase/auth';
 import { Link } from 'react-router-dom'
 import authService from '../../services/authService'
 const board = require('../../icons/board.png');
 
 export const LoginPage = () => {
-    return (
+  const navigate = useNavigate();
+  const handleRegister = (provider :AuthProvider) => {
+    authService.registerWithProvider(provider)
+      .then(() => {
+        navigate('/');
+      });
+  }
+  return (
       <div className={"background"}>
         <img className={"background"} src={board} alt={"background"}/>
         <div className={"cover"}>
@@ -17,18 +25,12 @@ export const LoginPage = () => {
           <div className={'alt-login'}>
                 <button
                     className={'google'}
-                    onClick={() => {
-                        const provider = new GoogleAuthProvider()
-                        authService.signInWithProvider(provider)
-                    }}
+                    onClick={() => handleRegister(new GoogleAuthProvider())}
                 >
                 </button>
                 <button
                     className={'facebook'}
-                    onClick={() => {
-                        const provider = new FacebookAuthProvider()
-                        authService.signInWithProvider(provider)
-                    }}
+                    onClick={() => handleRegister(new FacebookAuthProvider())}
                 >
                 </button>
             </div>
