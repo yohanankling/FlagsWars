@@ -100,6 +100,17 @@ export class Entity {
     this.isVisible = false;
   }
 
+  public getPosition(board: Board): Position | null {
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        if (board.getCell(x, y).entity === this) {
+          return { x, y };
+        }
+      }
+    }
+    return null;
+  }
+
   public getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
     const markerBoard = new MarkerBoard();
     for (let i = -1; i <= 1; i++) {
@@ -117,20 +128,23 @@ export class Entity {
   public effectOnEntity(enemyEntity: Entity, board: Board) {
     enemyEntity.isVisible = true;
     this.isVisible = true;
+    const minePosition = this.getPosition(board);
+    const enemyPosition = enemyEntity.getPosition(board);
     if (this.level > enemyEntity.level){
-      enemyEntity.kill;
+      this.set(board, enemyPosition);
+      this.kill(board, minePosition);
     }
-    else if (this.level <= enemyEntity.level){
-      this.kill;
+    else if (this.level < enemyEntity.level){
+      this.kill(board, minePosition);
     }
-
-    // if(enemyEntity.type === "bomb") {
-    //handle bomb
-    // }
   }
 
-  public kill(entity: Entity) {
-    entity = null;
+  public kill(board: Board, currPos: Position) {
+    board.getCell(currPos.x, currPos.y).entity = null;
+  }
+
+  public set(board: Board, currPos: Position) {
+    board.getCell(currPos.x, currPos.y).entity = this;
   }
 
   public isInsideBorders(x: number, y: number) {
@@ -385,13 +399,11 @@ export class GameManager {
       this.board.getCell(newPos.x, newPos.y).entity = entity;
       this.board.getCell(currPos.x, currPos.y).entity = null;
     }
-
     this.passTurn();
   }
 
   public setReady(t: Team) {
     t.isReady = true;
-
     if (this.blueTeam.isReady && this.redTeam.isReady) {
       for (let i = 0; i < 8; i++) {
         if (this.board.getCell(i, this.blueTeam.FIRST_COLUMN).entity == null) {

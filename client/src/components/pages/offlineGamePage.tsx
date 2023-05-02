@@ -378,7 +378,7 @@ const OfflineGamePage = () => {
           }
         </div>
         {isFinished ? (
-          <div>
+          <div className='readyBtn'>
             <button onClick={handleReadyClick}>Ready</button>
           </div>
         ) : null}
