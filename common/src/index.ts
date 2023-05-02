@@ -1,3 +1,4 @@
+
 export enum team {
   blue,
   red,
@@ -5,10 +6,6 @@ export enum team {
 
 export type entityType = 'child' | 'death' | 'devil' | 'dwarf' | 'flag' | 'king' | 'knight'
   | 'mommy' | 'ninja' | 'ninja2' | 'odin' | 'thor' | 'troll' | 'vampire' | 'viking' | 'wizard';
-export enum printType {
-  types,
-  visibility,
-}
 export class Board {
   public board: Cell[][];
 
@@ -17,7 +14,7 @@ export class Board {
 
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
-        this.board[y][x] = new Cell(x, y);
+        this.board[y][x] = new Cell(x, y, color.red);
       }
     }
   }
@@ -29,48 +26,12 @@ export class Board {
   public getEntity(x: number, y: number) {
     return this.board[y][x].entity;
   }
-
-  public getClone() {
-    const clone = new Board();
-    clone.board = [...this.board];
-
-    return clone;
-  }
-
-  /**
-   * helper function
-   */
-  public printBoard(pt: printType = printType.types) {
-    let str = '';
-
-    if (pt === printType.types) {
-      for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-          str += this.board[i][j].isEmpty() ? '0'.padStart(4, ' ').padEnd(4, ' ') : this.board[i][j].entity?.type;
-          str += ', ';
-        }
-        str += '\n';
-      }
-    } else if (pt === printType.visibility) {
-      for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-          str += this.board[i][j].isEmpty()
-            ? '0'.padStart(4, ' ').padEnd(4, ' ')
-            : this.board[i][j].entity?.isVisible?.toString();
-          str += ', ';
-        }
-        str += '\n';
-      }
-    }
-
-    console.log(str);
-  }
 }
 
 export class Cell {
   public entity: Entity | null;
 
-  constructor(public x: number, public y: number) {
+  constructor(public x: number, public y: number, public color: color) {
     this.entity = null;
   }
 
@@ -141,19 +102,15 @@ export class Entity {
 
   public getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
     const markerBoard = new MarkerBoard();
-    if (
-      this.team === team.blue &&
-      this.isInsideBorders(x, y + 1) &&
-      (board.getCell(x, y + 1).isEmpty() || board.getEntity(x, y + 1)?.team !== this.team)
-    ) {
-      markerBoard.setHighlight(x, y + 1);
-    } else if (
-      this.isInsideBorders(x, y - 1) &&
-      (board.getCell(x, y - 1).isEmpty() || board.getEntity(x, y - 1)?.team !== this.team)
-    ) {
-      markerBoard.setHighlight(x, y - 1);
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        if (Math.abs(i) + Math.abs(j) === 2) continue;
+        if (this.isInsideBorders(x + i, y + j) &&
+          (board.getCell(x + i, y + j).isEmpty() || board.getEntity(x + i, y + j)?.team !== this.team)) {
+          markerBoard.setHighlight(x + i, y + j);
+        }
+      }
     }
-
     return markerBoard;
   }
 
@@ -377,11 +334,6 @@ export class GameManager {
       allowedYColumn = this.redTeam.FIRST_COLUMN;
     }
 
-    const leftSetupCount = currentTeam.piecesSetup[entity.type];
-    // if (leftSetupCount < 0) {
-    //   throw new Error('Reached max pieces that are allowed.');
-    // }
-
     if (y !== allowedYColumn) {
       throw new Error('Position is not allowed for setup.');
     }
@@ -397,13 +349,6 @@ export class GameManager {
   public setPiece(entity: Entity, pos: Position) {
     if (this.setupFinished) throw new Error('Setup is finished');
     const { x, y } = pos;
-    const t = entity.team;
-    let currentTeam: Team;
-    if (t === team.blue) {
-      currentTeam = this.blueTeam;
-    } else {
-      currentTeam = this.redTeam;
-    }
 
     if (this.board.getCell(x, y).entity !== null) {
       throw new Error('Cannot place pieces where a piece is already placed');
@@ -508,8 +453,10 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    instance.blueTeam.piecesSetup = { king: 0, death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 0, ninja:0, ninja2: 0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 0, child: 0 };
-    instance.redTeam.piecesSetup = { king: 0, death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 0, ninja:0, ninja2: 0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 0, child: 0 };
+    instance.blueTeam.piecesSetup = { king: 0, death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, ninja2: 0, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 0, child: 0 };
+    // instance.blueTeam.piecesSetup = { king: 0, death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, ninja2: 0, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
+    // instance.redTeam.piecesSetup = { king: 0, death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, ninja2: 0, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = { king: 0, death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, ninja2: 0, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;
@@ -536,7 +483,7 @@ export class GameManagerFactory {
     const restored = new Board();
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        restored.board[i][j] = new Cell(j, i);
+        restored.board[i][j] = new Cell(j, i, color.yellow);
         restored.board[i][j].entity = this.restoreEntity(board[i][j].entity);
       }
     }
