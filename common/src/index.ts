@@ -154,7 +154,7 @@ export class Death extends Entity {
     super();
     this.type = 'death';
     this.team = team;
-    this.level = 1;
+    this.level = 5;
   }
 }
 
