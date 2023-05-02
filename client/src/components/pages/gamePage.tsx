@@ -22,7 +22,7 @@ const redPawnImage = require('../../assets/devil_blue.png');
 const bluePawnImage = require('../../assets/devil_red.png');
 const redKingImage = require('../../assets/death_red.png');
 const blueKingImage = require('../../assets/death_blue.png');
-const eyeImage = require('../../assets/eye.jpg');
+const eyeImage = require('../../assets/eye.png');
 
 // this is an ugly hack to inject the images to the imported common project
 Child.getImage = function (entity) {

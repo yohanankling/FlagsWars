@@ -63,7 +63,7 @@ const viking_blue = require('../../assets/viking_blue.png');
 const viking_red = require('../../assets/viking_red.png');
 const wizard_blue = require('../../assets/wizard_blue.png');
 const wizard_red = require('../../assets/wizard_red.png');
-const eyeImage = require('../../assets/eye.jpg');
+const eyeImage = require('../../assets/eye.png');
 
 Child.getImage = function (entity) {
   return entity.team === team.blue ? child_blue : child_red;
@@ -145,16 +145,16 @@ const OfflineGamePage = () => {
     if (entity == null) return null;
     if (entity.team !== currentTeam.team && !entity.isVisible) {
       if (entity.team === team.blue){
-        return <img src={child_blue}></img>;
+        return <img className="image" src={child_blue}></img>;
       }
-      else {return <img src={child_red}></img>;}
+      else {return <img className="image" src={child_red}></img>;}
     }
 
     return (
       <div className="image-container">
-        <img width={45} height={40} src={(entity as any).constructor?.getImage(entity)} />
+        <img className="image" src={(entity as any).constructor?.getImage(entity)} />
         {entity.isVisible && entity.team === currentTeam.team ? (
-          <img width={15} height={15} src={eyeImage} className="small-image" />
+          <img className="eye" src={eyeImage} />
         ) : null}
       </div>
     );
@@ -240,10 +240,8 @@ const OfflineGamePage = () => {
         <div className="icons">
          <br/>
           {currentTeamPiecesSetup.dwarf === 0 ? null :
-            <img
+            <img className="image"
               src={dwarfImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Dwarf(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -257,10 +255,8 @@ const OfflineGamePage = () => {
             />
           }
           {currentTeamPiecesSetup.death === 0 ? null :
-            <img
+            <img className="image"
               src={deathImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Death(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -274,10 +270,8 @@ const OfflineGamePage = () => {
             />
           }
           {currentTeamPiecesSetup.devil === 0 ? null :
-            <img
+            <img className="image"
               src={devilImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Devil(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -291,10 +285,8 @@ const OfflineGamePage = () => {
             />
           }
           {currentTeamPiecesSetup.flag === 0 ? null :
-            <img
+            <img className="image"
               src={flagImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Flag(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -309,10 +301,8 @@ const OfflineGamePage = () => {
           }
           <br/>
           {currentTeamPiecesSetup.mommy === 0 ? null :
-            <img
+            <img className="image"
               src={mommyImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Mommy(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -326,10 +316,8 @@ const OfflineGamePage = () => {
             />
           }
           {currentTeamPiecesSetup.ninja === 0 ? null :
-            <img
+            <img className="image"
               src={ninjaImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Ninja(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -343,10 +331,8 @@ const OfflineGamePage = () => {
             />
           }
           {currentTeamPiecesSetup.wizard === 0 ? null :
-            <img
+            <img className="image"
               src={wizardImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Wizard(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();
@@ -360,10 +346,8 @@ const OfflineGamePage = () => {
             />
           }
           {currentTeamPiecesSetup.troll === 0 ? null :
-            <img
+            <img className="image"
               src={trollImage}
-              width={100}
-              height={100}
               onClick={() => {
                 setSelectedEntity({ entity: new Troll(currentTeam.team), x: -1, y: -1 });
                 const highlightBoard = new MarkerBoard();

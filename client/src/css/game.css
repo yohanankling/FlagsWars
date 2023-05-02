@@ -66,3 +66,23 @@
   position: relative;
   top: -10px;
 }
+.image-container{
+  position: relative;
+}
+
+
+
+.image {
+  width: 40px;
+  height: 40px;
+}
+
+.eye {
+  position: absolute;
+  opacity: 0.8;
+  width: 30px;
+  height: 30px;
+  left: 7px;
+  top: 25px;
+}
+
