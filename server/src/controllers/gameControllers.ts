@@ -76,7 +76,7 @@ export const gameController = () => {
         throw new Error('user is not part of the game error');
       }
 
-      let currTeam: Team = t === team.black ? gm.blackTeam : gm.whiteTeam;
+      let currTeam: Team = t === team.blue ? gm.blueTeam : gm.redTeam;
 
       switch (moveType) {
         case 'set_ready':

@@ -1,12 +1,10 @@
-import {Child, Death, Devil, Dworf, Flag, King, Knight, Mommy, Ninja, Ninja2, Odin, Thor, Troll, Vampire, Viking, Wizard} from './Entitys';
 export enum team {
   blue,
   red,
 }
 
-export type entityType = 'child' | 'death' | 'devil' | 'dworf' | 'flag' | 'king' | 'knight'
+export type entityType = 'child' | 'death' | 'devil' | 'dwarf' | 'flag' | 'king' | 'knight'
   | 'mommy' | 'ninja' | 'ninja2' | 'odin' | 'thor' | 'troll' | 'vampire' | 'viking' | 'wizard';
-
 export enum printType {
   types,
   visibility,
@@ -35,6 +33,7 @@ export class Board {
   public getClone() {
     const clone = new Board();
     clone.board = [...this.board];
+
     return clone;
   }
 
@@ -134,6 +133,7 @@ export class Entity {
   public type: entityType;
   public team: team;
   public isVisible: boolean;
+  public level: number;
 
   constructor() {
     this.isVisible = false;
@@ -153,17 +153,183 @@ export class Entity {
     ) {
       markerBoard.setHighlight(x, y - 1);
     }
+
     return markerBoard;
-  }
-  protected isInsideBorders(x: number, y: number) {
-    return x >= 0 && x <= 7 && y >= 0 && y <= 7;
   }
 
   public effectOnEntity(enemyEntity: Entity, board: Board) {
     enemyEntity.isVisible = true;
     this.isVisible = true;
+    if (this.level > enemyEntity.level){
+      enemyEntity.kill;
+    }
+    else if (this.level <= enemyEntity.level){
+      this.kill;
+    }
+
+    // if(enemyEntity.type === "bomb") {
+    //handle bomb
+    // }
   }
+
+  public kill(entity: Entity) {
+    entity = null;
+  }
+
+  public isInsideBorders(x: number, y: number) {
+    return x >= 0 && x <= 7 && y >= 0 && y <= 7;
+  }
+
   public static getImage?(entity: Entity);
+}
+
+export class Child extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'child';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Death extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'death';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Devil extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'devil';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Dwarf extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'dwarf';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Flag extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'flag';
+    this.team = team;
+    this.level = 0;
+  }
+  public override getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
+    return new MarkerBoard();
+  }
+  public override effectOnEntity(entity: Entity, board: Board) {
+  }
+}
+
+export class King extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'king';
+    this.team = team;
+    this.level = 3;
+  }
+}
+
+export class Knight extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'knight';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Mommy extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'mommy';
+    this.team = team;
+    this.level = 10;
+  }
+}
+
+export class Ninja extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'ninja';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Ninja2 extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'ninja2';
+    this.team = team;
+    this.level = 1;
+  }
+}
+
+export class Odin extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'odin';
+    this.team = team;
+    this.level = 3;
+  }
+}
+
+export class Thor extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'thor';
+    this.team = team;
+    this.level = 2;
+  }
+}
+
+export class Troll extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'troll';
+    this.team = team;
+    this.level = 5;
+  }
+}
+
+export class Vampire extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'vampire';
+    this.team = team;
+    this.level = 6;
+  }
+}
+
+export class Viking extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'viking';
+    this.team = team;
+    this.level = 2;
+  }
+}
+
+export class Wizard extends Entity {
+  constructor(team: team) {
+    super();
+    this.type = 'wizard';
+    this.team = team;
+    this.level = 1;
+  }
 }
 
 export type IPiecesSetup = {
@@ -212,9 +378,9 @@ export class GameManager {
     }
 
     const leftSetupCount = currentTeam.piecesSetup[entity.type];
-    if (leftSetupCount <= 0) {
-      throw new Error('Reached max pieces that are allowed.');
-    }
+    // if (leftSetupCount < 0) {
+    //   throw new Error('Reached max pieces that are allowed.');
+    // }
 
     if (y !== allowedYColumn) {
       throw new Error('Position is not allowed for setup.');
@@ -342,8 +508,8 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    instance.blueTeam.piecesSetup = { king: 1, death:1, devil: 1, dworf:1, flag: 1, knight:1, mommy: 1, ninja:1, ninja2: 1, odin:1, thor: 1, troll:1, vampire: 1, viking:1, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = { king: 1, death:1, devil: 1, dworf:1, flag: 1, knight:1, mommy: 1, ninja:1, ninja2: 1, odin:1, thor: 1, troll:1, vampire: 1, viking:1, wizard: 1, child: 0 };
+    instance.blueTeam.piecesSetup = { king: 0, death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 0, ninja:0, ninja2: 0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 0, child: 0 };
+    instance.redTeam.piecesSetup = { king: 0, death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 0, ninja:0, ninja2: 0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;
