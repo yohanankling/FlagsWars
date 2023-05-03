@@ -1,17 +1,30 @@
-TODO :: add name to manually register
-TODO :: add friend list implement
-TODO :: add random component implement
-TODO :: add profile page implement
-TODO :: add tables implement
-TODO :: add contact us implement
+60 :
+TODO :: fix wizard ability
+TODO :: fix upgrade the regular assets
+TODO :: add form to manually register
+TODO :: add form to manually login
+TODO :: add friend list
+TODO :: design friend list
 TODO :: add 2 player game implement
+TODO :: add random component game
+TODO :: add message box in the game
+TODO :: add profile page
+TODO :: design profile page
+TODO :: add contact us page
+TODO :: design contact us page
+TODO :: add tables and statistics page
+TODO :: design tables page
+TODO :: add betta zone page
+TODO :: design betta zone page
+TODO :: fix cursor when set up the game
 TODO :: change popup to game in home page
+
+80:
+TODO :: set scalability to server
+
+100:
 TODO :: add record game
 TODO :: add machine learning
-TODO :: add betta zone against computer
-TODO :: add message box in the game
-TODO :: add wizard ability
-TODO :: add fix upgrade the regular assets
 
 
 

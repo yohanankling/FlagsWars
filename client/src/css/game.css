@@ -59,6 +59,10 @@
   margin-top: -30px;
 }
 
+.icons:hover {
+  cursor: pointer;
+}
+
 .readyBtn {
   display: flex;
   justify-content: center;
