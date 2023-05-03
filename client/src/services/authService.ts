@@ -1,6 +1,19 @@
-import { AuthProvider, signInWithPopup } from 'firebase/auth'
+import { AuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from '../firebase/firebase'
 
+
+const registerManualy = async (email: string, name: string, password: string) => {
+    try {
+        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredentials.user, { displayName: name });
+        console.log('Register Successfully')
+        console.log(userCredentials)
+    } catch (error) {
+        console.log('Register Failed')
+        console.warn(error)
+        throw error;
+    }
+}
 const registerWithProvider = async (provider: AuthProvider) => {
     try {
         const userCredentials = await signInWithPopup(auth, provider)
@@ -25,4 +38,4 @@ const signOut = async () => {
     await auth.signOut()
 }
 
-export default { registerWithProvider, signInWithProvider, signOut }
+export default {registerManualy, registerWithProvider, signInWithProvider, signOut }

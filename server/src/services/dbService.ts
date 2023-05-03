@@ -81,20 +81,3 @@ export class DbService {
     return users;
   }
 }
-
-// const a = {
-//   game_invites: {
-//     aaabbb: {
-//       sent: {
-//         toUid: "bbbccc", 
-//         status: "rejected | pending | ongoing" | "finished",
-//         gameId: null
-//       },
-//       received: {
-//         fromUid: "",
-//         status: "rejected | pending | ongoing" | "finished",
-//         gameId: null
-//       },
-//     },
-//   },
-// };

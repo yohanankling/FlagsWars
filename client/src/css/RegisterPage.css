@@ -1,12 +1,45 @@
+.form {
+    margin-top: 4em;
+    align-items: center;
+    text-align: center;
+}
+
+input {
+    border: none;
+    background-color: rgb(229, 226, 226);
+    border-radius: 0.25em;
+    text-align: center;
+}
+
+input:focus {
+    outline-color: rgb(32, 177, 255);
+}
+
+.inputs {
+    width: 50%;
+    height: 3em;
+    margin: 0.2em;
+}
+
+.RegisterBtn{
+    display: block;
+    margin: 1em auto;
+}
+
 .alt-register {
-    margin-top: 30px;
     height: 3em;
     display: flex;
     justify-content: space-around;
 }
 
+.registerMessage{
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    white-space: nowrap;
+}
+
 .alt-register button {
-    margin-top: 17em;
     width: 45%;
     height: 90%;
     border-radius: 0.25em;
@@ -16,6 +49,7 @@
     background-repeat: no-repeat;
     cursor: pointer;
     justify-content: space-around;
+    margin-top: 80px;
 }
 
 .google {background-image: url("../icons/google.png");}

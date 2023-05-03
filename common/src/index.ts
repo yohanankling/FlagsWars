@@ -1,4 +1,3 @@
-
 export enum team {
   blue,
   red,
@@ -346,6 +345,8 @@ export class Viking extends Entity {
 export class Wizard extends Entity {
   public hide: number;
   public train: number;
+  public reveal: number;
+
   constructor(team: team) {
     super();
     this.type = 'wizard';
@@ -353,16 +354,22 @@ export class Wizard extends Entity {
     this.level = 0.5;
     this.hide = 2;
     this.train = 5;
+    this.reveal = 1;
   }
-//   public override effectOnEntity(entity: Entity, board: Board) {
-//   if (entity.team === this.team){
-//       if (entity.type === "child" || entity.type === "knight" || entity.type === "viking" || entity.type === "thor"){
-//         const position = entity.getPosition(board);
-//         this.upgrade(board, entity, position, position, this.team);
-//         this.train--;
-//       }
-//   }
-// }
+  public override effectOnEntity(entity: Entity, board: Board) {
+    // if (entity.team !== this.team){
+    //   entity.isVisible = true;
+    //   this.reveal --;
+    // }
+
+    // if (entity.team === this.team){
+  //     if (entity.type === "child" || entity.type === "knight" || entity.type === "viking" || entity.type === "thor"){
+  //       const position = entity.getPosition(board);
+  //       this.upgrade(board, entity, position, position, this.team);
+  //       this.train--;
+  //     }
+  // }
+}
 }
 
 class EntityFactory {
@@ -489,7 +496,6 @@ export class GameManager {
       console.error('new Pos: ', newPos);
       console.error('curr Pos: ', currPos);
       console.error('entity Pos: ', entity);
-
       throw new Error('Move is not possible');
     }
     if (this.board.getCell(newPos.x, newPos.y).entity !== null) {
@@ -564,10 +570,10 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 1, child: 0 };
-    // instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
-    // instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1 odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 1, child: 0 };
+    // instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 1, child: 0 };
+    instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
+    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 1, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;

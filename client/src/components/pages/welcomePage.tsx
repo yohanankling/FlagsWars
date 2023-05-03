@@ -16,7 +16,7 @@ export const WelcomePage = () => {
       <>
           <p className="welcome">welcome to flags war!</p>
           <div className={popupStyle}>
-            <img className="image" src={require('../../icons/google.png')} width={30} height={30} alt={"board"}/>
+            <img className="image" src={require('../../icons/game.png')} width={30} height={30} alt={"board"}/>
           </div>
           <div className="buttons">
             <Link className="links" to="/login">

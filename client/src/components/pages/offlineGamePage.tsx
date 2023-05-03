@@ -140,9 +140,9 @@ const OfflineGamePage = () => {
     return (
       <div className="image-container">
         <img className="image" src={(entity as any).constructor?.getImage(entity)} />
-        {entity.isVisible && entity.team === currentTeam.team ? (
-          <img className="eye" src={eyeImage} />
-        ) : null}
+        {/*{entity.isVisible && entity.team === currentTeam.team ? (*/}
+        {/*  <img className="eye" src={eyeImage} />*/}
+        {/*) : null}*/}
       </div>
     );
   };
