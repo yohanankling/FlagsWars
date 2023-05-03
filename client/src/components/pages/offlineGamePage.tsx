@@ -374,18 +374,24 @@ const OfflineGamePage = () => {
     gameManager.setReady(currentTeam);
     const oppositeTeam = gameManager.getOppositeTeam(currentTeam);
 
-    let num1, num2;
-    do {
-      num1 = Math.floor(Math.random() * 8);
-      num2 = Math.floor(Math.random() * 8);
-    } while (num1 === num2);
-
-    gameManager.setup_setPiece(new King(oppositeTeam.team), { x: num1, y: oppositeTeam.FIRST_COLUMN });
-    gameManager.setup_setPiece(new King(oppositeTeam.team), { x: num2, y: oppositeTeam.FIRST_COLUMN });
+    const numbers = new Set();
+    while (numbers.size < 8) {
+      const number = Math.floor(Math.random() * 8);
+      numbers.add(number);
+    }
+    const array = Array.from(numbers);
+    gameManager.setup_setPiece(new Dwarf(oppositeTeam.team), { x: array.at(0) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Death(oppositeTeam.team), { x: array.at(1) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Devil(oppositeTeam.team), { x: array.at(2) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Flag(oppositeTeam.team), { x: array.at(3) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Mommy(oppositeTeam.team), { x: array.at(4) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Ninja(oppositeTeam.team), { x: array.at(5) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Wizard(oppositeTeam.team), { x: array.at(6) as number, y: oppositeTeam.FIRST_COLUMN });
+    gameManager.setup_setPiece(new Troll(oppositeTeam.team), { x: array.at(7) as number, y: oppositeTeam.FIRST_COLUMN });
     gameManager.setReady(oppositeTeam);
 
     const gmClone = GameManagerFactory.getClone(gameManager);
-    setGameManager(gmClone); //hack to update the ui..
+    setGameManager(gmClone);
     setSelectedEntity(null);
   };
 
@@ -446,6 +452,8 @@ const OfflineGamePage = () => {
                   key={x}
                   className={classNames('cell', {
                     [`${color[highlightBoard.returnHighlightType(x, y)]}-highlight`]: true,
+                    'light': (y + x) % 2 === 0,
+                    'dark': (y + x) % 2 === 1,
                   })}
                   onClick={() => handleCellClick(cell)}
                 >
