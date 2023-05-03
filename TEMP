@@ -1,0 +1,7 @@
+ if (this.type === "death" && enemyEntity.type !== "mommy"){
+      this.kill(board, minePosition);
+      this.kill(board, enemyPosition);
+    }
+    else if (enemyEntity.type === "mommy" && this.type !== "vampire"){
+      this.kill(board, enemyPosition);
+    }

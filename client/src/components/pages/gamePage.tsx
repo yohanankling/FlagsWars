@@ -7,7 +7,6 @@ import '../../css/game.css';
 import {
   Cell,
   Entity,
-  King,
   MarkerBoard,
   Position,
   color,
@@ -29,9 +28,6 @@ Child.getImage = function (entity) {
   return entity.team === team.blue ? bluePawnImage : redPawnImage;
 };
 
-King.getImage = function (entity) {
-  return entity.team === team.blue ? blueKingImage : redKingImage;
-};
 interface selectedEntity {
   x: number;
   y: number;
@@ -96,13 +92,13 @@ const GamePage = () => {
             width={100}
             height={100}
             onClick={() => {
-              if (currentTeamPiecesSetup.king === 0) {
+              if (currentTeamPiecesSetup.child === 0) {
                 return;
                 //show error
               }
 
               const t = getTeam(currentTeam);
-              setSelectedEntity({ entity: new King(t.team), x: -1, y: -1 });
+              setSelectedEntity({ entity: new Child(t.team), x: -1, y: -1 });
               const highlightBoard = new MarkerBoard();
               for (let i = 0; i < 8; i++) {
                 if (!gameManager.board.getCell(i, t.FIRST_COLUMN).entity) {

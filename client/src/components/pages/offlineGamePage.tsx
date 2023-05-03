@@ -12,12 +12,10 @@ import {
   entityType,
   Flag,
   GameManagerFactory,
-  King,
   Knight,
   MarkerBoard,
   Mommy,
   Ninja,
-  Ninja2,
   Odin,
   Team,
   team,
@@ -41,16 +39,12 @@ const dwarf_blue = require('../../assets/dwarf_blue.png');
 const dwarf_red = require('../../assets/dwarf_red.png');
 const flag_blue = require('../../assets/flag_blue.png');
 const flag_red = require('../../assets/flag_red.png');
-const king_blue = require('../../assets/king_blue.png');
-const king_red = require('../../assets/king_red.png');
 const knight_blue = require('../../assets/knight_blue.png');
 const knight_red = require('../../assets/knight_red.png');
 const mommy_blue = require('../../assets/mommy_blue.png');
 const mommy_red = require('../../assets/mommy_red.png');
 const ninja_blue = require('../../assets/ninja_blue.png');
 const ninja_red = require('../../assets/ninja_red.png');
-const ninja_blue_2 = require('../../assets/ninja_blue_2.png');
-const ninja_red_2 = require('../../assets/ninja_red_2.png');
 const odin_blue = require('../../assets/odin_blue.png');
 const odin_red = require('../../assets/odin_red.png');
 const thor_blue = require('../../assets/thor_blue.png');
@@ -85,10 +79,6 @@ Flag.getImage = function (entity) {
   return entity.team === team.blue ? flag_blue : flag_red;
 };
 
-King.getImage = function (entity) {
-  return entity.team === team.blue ? king_blue : king_red;
-};
-
 Knight.getImage = function (entity) {
   return entity.team === team.blue ? knight_blue : knight_red;
 };
@@ -101,9 +91,6 @@ Ninja.getImage = function (entity) {
   return entity.team === team.blue ? ninja_blue : ninja_red;
 };
 
-Ninja2.getImage = function (entity) {
-  return entity.team === team.blue ? ninja_blue_2 : ninja_red_2;
-};
 
 Odin.getImage = function (entity) {
   return entity.team === team.blue ? odin_blue : odin_red;
