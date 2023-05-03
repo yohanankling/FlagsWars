@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import '../../css/FriendsPage.css';
 import { auth, realTimeDb } from '../../firebase/firebase';
-import axios from 'axios';
 import { send } from '../../services/httpContext';
 import { ref, onValue } from 'firebase/database';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import authService from '../../services/authService';
+
+const contactImg = require('../../icons/contact.png');
+const logoutImg = require('../../icons/logout.png');
+const profileImg = require('../../icons/profile.png');
+const homeImg = require('../../icons/home.png');
+const board = require('../../icons/board.png');
 
 export const FriendsPage = () => {
+  const navigate = useNavigate();
   const [users, setUsersList] = useState<{ email: string; uid: string }[]>([]);
   const [friendListLoaded, setFriendListLoaded] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,9 +173,41 @@ export const FriendsPage = () => {
   const gameInvitesPostRender = renderGameInvites();
 
   return (
-    <>
-      <h1>Friends List</h1>
+    <div className={'background'}>
+      <img className={'background'} src={board} alt={'background'} />
+      <div className='cover'>
+        <>
+          <div className='navbar'>
+            <h4 className='name'> bla bla </h4>
+            <div className='navbarBtns'>
+              <button className='homeBtn'
+                      onClick={() => {
+                        navigate('/');
+                      }}>
+                <img src={homeImg} alt='Home' />
+              </button>
+              <button className='contactBtn'
+                      onClick={() => {
+                        navigate('/contact');
+                      }}>
+                <img src={contactImg} alt='Contact' />
+              </button>
+              <button className='profileBtn'
+                      onClick={() => {
+                        navigate('/profile');
+                      }}>
+                <img className='profileImg' src={profileImg} alt='Profile' />
+              </button>
+              <button className='logoutBtn'
+                      onClick={() => {
+                        authService.signOut();
+                      }}>
+                <img src={logoutImg} alt='Logout' />
+              </button>
+            </div>
+          </div>
 
+          <h4 className='title'> Friends List </h4>
       {friendListLoaded ? (
         <ul>
           {users.map((user, i) => {
@@ -188,31 +228,29 @@ export const FriendsPage = () => {
       ) : (
         <p>Loading..</p>
       )}
-
-      <label htmlFor="newFriendIdInput">Add new friend</label>
-      <input id="newFriendIdInput" type="text" />
+      <div className='add-friend'>
+      <h2 className='subtitle'>Add new friend</h2>
+      <input className='input' id='newFriendIdInput' type='text'/>
       <button
+        className="new-friend-button"
         onClick={() => {
           addNewUserHandler((document.querySelector('#newFriendIdInput') as any)?.value);
         }}
       >
         Add
       </button>
-
-      <p>
-        Your Uid: <b>{auth.currentUser?.uid}</b>
-      </p>
-
-      <div>
-        <h2>Game Invites</h2>
+      </div>
+      <div className='game-invites'>
+        <h2 className='subtitle'>Game Invites</h2>
         {!generateTotalGameInvites().length ? (
-          <p>You do not have game invites, send your friends a invite or wait to get invited :)</p>
+          <p className='game-message'>You do not have game invites, send your friends a invite or wait to get invited</p>
         ) : (
           <ul>{renderGameInvites()}</ul>
         )}
       </div>
-
       {error ? <p>Error: {error}</p> : null}
-    </>
-  );
+        </>
+      </div>
+      </div>
+);
 };

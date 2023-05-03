@@ -1,0 +1,114 @@
+.navbar {
+    position: absolute;
+    top: 5%;
+    background-color: #363434;
+    height: 2em;
+    width: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.profileBtn, .contactBtn, .logoutBtn, .homeBtn {
+    width: 30px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #449d16;
+    margin: 10px;
+    background-size: contain;
+    transition: filter 300ms;
+}
+
+.profileImg {
+    height: 15px;
+}
+
+.profileBtn, .contactBtn, .logoutBtn, .homeBtn{
+    filter: brightness(1.2);
+}
+
+.profileBtn:hover, .contactBtn:hover, .logoutBtn:hover, .homeBtn:hover {
+    transform: scale(1.4);
+    transition: 0.4s;
+}
+.navbarBtns {
+    display: flex;
+    align-items: center;
+}
+
+.name {
+    width: 30px;
+    height: 25px;
+    white-space: nowrap;
+    margin-right: auto;
+    margin-left: 10px;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.title{
+    position: relative;
+    font-size: 150%;
+    font-weight: bold;
+    text-align: center;
+    color: #4CAF50;
+    margin: 0.4em;
+    top: 2em;
+}
+
+img {
+    width: 25px;
+    height: 20px;
+}
+
+.add-friend{
+    display: flow;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    position: absolute;
+    top: 40%;
+    left: -35%;
+    transform: translate(-50%, -50%);
+    width: 35vh;
+    height: 25vh;
+    border-radius: 1em;
+    background-color: white;
+    box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
+}
+
+.input{
+    height: 25px;
+    border: none;
+    background-color: rgb(229, 226, 226);
+    border-radius: 0.25em;
+    position: relative;
+    top: -13px;
+}
+
+.new-friend-button{
+    margin: 0 auto;
+}
+
+.game-invites {
+    position: absolute;
+    top: 40%;
+    left: 140%;
+    transform: translate(-50%, -50%);
+    width: 35vh;
+    height: 25vh;
+    border-radius: 1em;
+    background-color: white;
+    box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
+}
+
+.subtitle{
+    color: #4CAF50;
+    text-align: center;
+}
+
+.game-message{
+    position: absolute;
+    top: 40px;
+    text-align: center;
+}
+
