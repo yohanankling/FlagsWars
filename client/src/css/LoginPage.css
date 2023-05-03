@@ -7,15 +7,23 @@
     margin: 0.4em;
 }
 
+.LoginBtn{
+    display: block;
+    margin: 1em auto;
+}
+
+.registerMessage {
+    text-align: center;
+}
+
 .alt-login {
-    margin-top: 30px;
     height: 3em;
     display: flex;
     justify-content: space-around;
 }
 
 .alt-login button {
-    margin-top: 17em;
+    margin-top: 3em;
     width: 45%;
     height: 90%;
     border-radius: 0.25em;
@@ -26,12 +34,6 @@
     cursor: pointer;
     justify-content: space-around;
 }
-
-.registerMessage {
-    margin-top: 18em;
-    text-align: center;
-}
-
 
 .google {background-image: url("../icons/google.png");}
 .google:hover{transform: scale(1.1);}

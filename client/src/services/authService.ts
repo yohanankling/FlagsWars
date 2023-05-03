@@ -1,4 +1,4 @@
-import { AuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { AuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/firebase'
 
 
@@ -34,8 +34,18 @@ const signInWithProvider = async (provider: any) => {
     }
 }
 
+const signInManualy = async (email: string, password: string) => {
+    try {
+        const userCredentials = await signInWithEmailAndPassword(auth, email, password)
+        console.log(userCredentials)
+    } catch (error) {
+        console.warn(error)
+        throw error;
+    }
+}
+
 const signOut = async () => {
     await auth.signOut()
 }
 
-export default {registerManualy, registerWithProvider, signInWithProvider, signOut }
+export default {registerManualy, registerWithProvider, signInWithProvider, signInManualy, signOut }
