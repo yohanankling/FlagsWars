@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { auth } from '../../firebase/firebase';
 import classNames from 'classnames';
 import '../../css/game.css';
 import {
@@ -25,9 +26,9 @@ import {
   Viking,
   Wizard,
 } from 'common';
-import { auth } from '../../firebase/firebase';
 const user = auth.currentUser;
-let name = user.displayName;
+let name = "YOU";
+if (user){let name = user.displayName;}
 const board = require('../../icons/board.png');
 
 
