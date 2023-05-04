@@ -6,16 +6,17 @@ import { addFriend, getFriends } from '../services/friendsService';
 
 export const friendsController = () => {
   app.get('/friends', authMiddleware, async (req: any, res) => {
-    const email = req.user.email;
-    const friends = await getFriends(email);
+    const uid = req.user.uid;
+
+    const friends = await getFriends(uid);
     res.send(friends);
   });
 
   app.post('/friends', authMiddleware, async (req: any, res) => {
-    const email = req.user.email;
+    const uid = req.user.uid;
     const friendId = req.body?.newFriendId;
 
-    if (email === friendId) {
+    if (uid === friendId) {
       return res.status(400).send({ message: 'Cannot add yourself as a friend' });
     }
 
@@ -25,7 +26,7 @@ export const friendsController = () => {
 
     const dbService = new DbService();
 
-    const currentUserRef = dbService.getUserDoc(email);
+    const currentUserRef = dbService.getUserDoc(uid);
     const currentUser = await currentUserRef.get();
 
     if ((currentUser as any).data().friends.includes(friendId)) {
@@ -38,7 +39,7 @@ export const friendsController = () => {
     }
 
     try {
-      const friendList = await addFriend(friendId, email);
+      const friendList = await addFriend(friendId, uid);
       res.status(200).send(friendList);
     } catch (error) {
       console.error(error);
