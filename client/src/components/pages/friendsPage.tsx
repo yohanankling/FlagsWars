@@ -231,7 +231,11 @@ export const FriendsPage = () => {
       )}
       <div className='add-friend'>
       <h2 className='subtitle'>Add new friend</h2>
-      <input className='input' id='newFriendIdInput' type='text'/>
+      <input className='input'
+             id='newFriendIdInput'
+             type='text'
+             placeholder="enter friend's email"
+      />
       <button
         className="new-friend-button"
         onClick={() => {

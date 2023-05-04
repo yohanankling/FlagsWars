@@ -7,7 +7,6 @@ import { addFriend, getFriends } from '../services/friendsService';
 export const friendsController = () => {
   app.get('/friends', authMiddleware, async (req: any, res) => {
     const uid = req.user.uid;
-
     const friends = await getFriends(uid);
     res.send(friends);
   });
