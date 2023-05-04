@@ -24,7 +24,8 @@ export const FriendsPage = () => {
     received: {},
     sent: {},
   });
-
+  const user = auth.currentUser;
+  let name = user.displayName;
   const listenToGameInvites = () => {
     const starCountRef = ref(realTimeDb, 'game_invites/' + auth.currentUser?.uid);
     onValue(starCountRef, (snapshot) => {
@@ -178,7 +179,7 @@ export const FriendsPage = () => {
       <div className='cover'>
         <>
           <div className='navbar'>
-            <h4 className='name'> bla bla </h4>
+            <h4 className='name'>{name}</h4>
             <div className='navbarBtns'>
               <button className='homeBtn'
                       onClick={() => {

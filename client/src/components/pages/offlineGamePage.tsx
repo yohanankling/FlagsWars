@@ -25,7 +25,9 @@ import {
   Viking,
   Wizard,
 } from 'common';
-
+import { auth } from '../../firebase/firebase';
+const user = auth.currentUser;
+let name = user.displayName;
 const board = require('../../icons/board.png');
 
 
@@ -429,7 +431,7 @@ const OfflineGamePage = () => {
     <div className={"background"}>
       <img className={"background"} src={board} alt={"background"}/>
       <div className={"cover"}>
-        <h1 className="title">YOU vs A M-A-C-H-I-N-E !</h1>
+        <h1 className="title">{name} vs A M-A-C-H-I-N-E !</h1>
       <div className="board">
         {gameManager.board.board?.map((row: Cell[], y: number) => (
           <div key={y} className="row">
