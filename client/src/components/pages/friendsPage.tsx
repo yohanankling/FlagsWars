@@ -209,13 +209,15 @@ export const FriendsPage = () => {
           </div>
 
           <h4 className='title'> Friends List </h4>
+          <div className='friends-list'>
       {friendListLoaded ? (
         <ul>
           {users.map((user, i) => {
             return (
               <li key={i}>
-                {user.email}{' '}
+                {user.uid}{' '}
                 <button
+                  className='invite-button'
                   onClick={() => {
                     inviteToGameHandler(user.uid);
                   }}
@@ -229,6 +231,7 @@ export const FriendsPage = () => {
       ) : (
         <p>Loading..</p>
       )}
+          </div>
       <div className='add-friend'>
       <h2 className='subtitle'>Add new friend</h2>
       <input className='input'

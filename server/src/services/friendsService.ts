@@ -1,14 +1,14 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { DbService } from './dbService';
 
-export const addFriend = async (friendId: string, currentUserId: string) => {
+export const addFriend = async (friendId: string, currentUserEmail: string) => {
   const dbService = new DbService();
 
-  const currentUserRef = dbService.getUserDoc(currentUserId);
+  const currentUserRef = dbService.getUserDoc(currentUserEmail);
 
   currentUserRef.update({ friends: FieldValue.arrayUnion(friendId) });
 
-  return getFriends(currentUserId);
+  return getFriends(currentUserEmail);
 };
 
 export const getFriends = async (userId: string) => {
