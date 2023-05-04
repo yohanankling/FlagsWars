@@ -5,7 +5,7 @@ import { FieldPath } from 'firebase-admin/firestore';
 
 interface User {
   name?: string;
-  uid?: string;
+  email?: string;
   friends?: string[];
 }
 
@@ -42,28 +42,28 @@ export class DbService {
     return authUsers;
   }
 
-  public async getAuthUser(email: string) {
+  public async getAuthUser(uid: string) {
     const snapshot = await this.getAuthUsers();
-    const user = snapshot.users.find((u) => u.email === email);
+    const user = snapshot.users.find((u) => u.uid === uid);
     return user;
   }
 
-  public async setUser(email: string, user: User) {
+  public async setUser(uid: string, user: User) {
     try {
-      return await this.getUsersCollection().doc(email).set(user);
+      return await this.getUsersCollection().doc(uid).set(user);
     } catch (error) {
       console.warn(error);
     }
   }
 
-  public async ensureUserInDb(email: string) {
-    const user = await this.getUser(email);
+  public async ensureUserInDb(uid: string) {
+    const user = await this.getUser(uid);
 
     if (!user?.exists) {
-      const authUser = await this.getAuthUser(email);
-      const newFirestoreUser: User = { uid: authUser?.uid, friends: [], name: authUser?.displayName };
+      const authUser = await this.getAuthUser(uid);
+      const newFirestoreUser: User = { email: authUser?.email, friends: [], name: authUser?.displayName };
 
-      await this.setUser(email, newFirestoreUser);
+      await this.setUser(uid, newFirestoreUser);
     }
   }
 
@@ -72,7 +72,7 @@ export class DbService {
 
     const usersSnapshot = await this.getUsersCollection().where(FieldPath.documentId(), 'in', usersIds).get();
     const users: UserWithId[] = [];
-    usersSnapshot.forEach((u: any) => users.push({ uid: u.data().uid }));
+    usersSnapshot.forEach((u: any) => users.push({ email: u.data().email }));
 
     for (let i = 0; i < usersIds.length; i++) {
       users[i].uid = usersIds[i];

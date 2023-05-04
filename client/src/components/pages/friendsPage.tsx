@@ -24,7 +24,8 @@ export const FriendsPage = () => {
     received: {},
     sent: {},
   });
-
+  // const user = auth.currentUser;
+  // let name = user.displayName;
   const listenToGameInvites = () => {
     const starCountRef = ref(realTimeDb, 'game_invites/' + auth.currentUser?.uid);
     onValue(starCountRef, (snapshot) => {
@@ -136,18 +137,20 @@ export const FriendsPage = () => {
   }, []);
 
   const addNewUserHandler = async (newFriendId: string) => {
+    let FriendUid = "no such email";
     try {
-      const res = await send({ method: 'POST', route: '/friends', data: { newFriendId: newFriendId } });
+      const res = await send({ method: 'POST', route: '/getuid', data: { email: newFriendId } });
+      FriendUid = res.data;
+    } catch (error: any) {
+      console.error(error);}
+
+    try {
+      const res = await send({ method: 'POST', route: '/friends', data: { newFriendId: FriendUid } });
       setUsersList(res.data);
     } catch (error: any) {
       console.error(error);
 
-      if (error.response.status === 400) {
-        console.error(error);
-        setError(error.response.data.message);
-      }
-
-      if (error.response.status === 409) {
+      if (error.response.status === 400 || error.response.status === 409) {
         console.error(error);
         setError(error.response.data.message);
       }
@@ -208,13 +211,15 @@ export const FriendsPage = () => {
           </div>
 
           <h4 className='title'> Friends List </h4>
-      {friendListLoaded ? (
+          <div className='friends-list'>
+          {friendListLoaded ? (
         <ul>
           {users.map((user, i) => {
             return (
               <li key={i}>
                 {user.email}{' '}
                 <button
+                  className='invite-button'
                   onClick={() => {
                     inviteToGameHandler(user.uid);
                   }}
@@ -228,11 +233,13 @@ export const FriendsPage = () => {
       ) : (
         <p>Loading..</p>
       )}
-      <div className='add-friend'>
+          </div>
+          <div className='add-friend'>
       <h2 className='subtitle'>Add new friend</h2>
       <input className='input' id='newFriendIdInput' type='text'/>
       <button
         className="new-friend-button"
+        placeholder="enter friend's email"
         onClick={() => {
           addNewUserHandler((document.querySelector('#newFriendIdInput') as any)?.value);
         }}

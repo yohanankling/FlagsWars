@@ -2,12 +2,17 @@ import { app } from '..';
 import { authMiddleware } from '../middlewares/auth';
 import { DbService } from '../services/dbService';
 import { acceptGameInvite, inviteToGame, rejectGameInvite } from '../services/gameInviteService';
-import { addFriend, getFriends } from '../services/friendsService';
+import { addFriend, getFriends, getUid } from '../services/friendsService';
 
 export const friendsController = () => {
+  app.post('/getuid', authMiddleware, async (req: any, res) => {
+    const email = req.body?.email;
+    const uid = await getUid(email);
+    res.send(uid);
+  });
+
   app.get('/friends', authMiddleware, async (req: any, res) => {
     const uid = req.user.uid;
-
     const friends = await getFriends(uid);
     res.send(friends);
   });
@@ -82,11 +87,6 @@ export const friendsController = () => {
     const answerVal = req.body?.answer as boolean;
     const friendUid = req.body?.friendUid as string;
     const currentUid = req.user.uid as string;
-
-    //TODO:
-    // handle body validation
-    // handle invite validation
-    // handle pending invite
 
     if (answerVal) {
       acceptGameInvite(currentUid, friendUid);

@@ -1,14 +1,14 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { DbService } from './dbService';
 
-export const addFriend = async (friendId: string, currentUserEmail: string) => {
+export const addFriend = async (friendId: string, currentUserId: string) => {
   const dbService = new DbService();
 
-  const currentUserRef = dbService.getUserDoc(currentUserEmail);
+  const currentUserRef = dbService.getUserDoc(currentUserId);
 
   currentUserRef.update({ friends: FieldValue.arrayUnion(friendId) });
 
-  return getFriends(currentUserEmail);
+  return getFriends(currentUserId);
 };
 
 export const getFriends = async (userId: string) => {
@@ -19,4 +19,16 @@ export const getFriends = async (userId: string) => {
 
   const fullFriendList = await dbService.getUsers((currentUser as any).data().friends);
   return fullFriendList;
+};
+
+
+export const getUid = async (email: string) => {
+  const dbService = new DbService();
+  const currentUserRef = dbService.getUsersCollection();
+  const query = currentUserRef.where("email", "==", email);
+  const results = await query.get();
+  if (results.empty) {
+    return "Email not exist!";
+  }
+  return results.docs[0].id;
 };

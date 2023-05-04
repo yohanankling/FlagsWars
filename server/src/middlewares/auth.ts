@@ -26,8 +26,7 @@ export const authMiddleware = async (req: RequestWithUser, res: Response, next: 
     req.user = decodedToken; // attach user object to request for use in downstream middleware
 
     const dbService = new DbService();
-    await dbService.ensureUserInDb(decodedToken.email as string);
-    // await dbService.ensureUserInDb(decodedToken.uid);
+    await dbService.ensureUserInDb(decodedToken.uid);
 
     next();
   } catch (error) {
