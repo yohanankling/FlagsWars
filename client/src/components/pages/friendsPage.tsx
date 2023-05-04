@@ -16,7 +16,6 @@ export const FriendsPage = () => {
   const navigate = useNavigate();
   const [users, setUsersList] = useState<{ email: string; uid: string }[]>([]);
   const [friendListLoaded, setFriendListLoaded] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [gameInvites, setGameInvites] = useState<{
     received: any;
     sent: any;
@@ -24,8 +23,8 @@ export const FriendsPage = () => {
     received: {},
     sent: {},
   });
-  // const user = auth.currentUser;
-  // let name = user.displayName;
+  const thisUser = auth.currentUser;
+  let thisName = thisUser.displayName;
   const listenToGameInvites = () => {
     const starCountRef = ref(realTimeDb, 'game_invites/' + auth.currentUser?.uid);
     onValue(starCountRef, (snapshot) => {
@@ -126,7 +125,7 @@ export const FriendsPage = () => {
         console.log(res.data);
       } catch (error: any) {
         console.error(error);
-        setError(error.response.data.message);
+        alert(error.response.data.message);
       }
 
       setFriendListLoaded(true);
@@ -152,7 +151,7 @@ export const FriendsPage = () => {
 
       if (error.response.status === 400 || error.response.status === 409) {
         console.error(error);
-        setError(error.response.data.message);
+        alert(error.response.data.message);
       }
     }
   };
@@ -181,7 +180,7 @@ export const FriendsPage = () => {
       <div className='cover'>
         <>
           <div className='navbar'>
-            <h4 className='name'> bla bla </h4>
+            <h4 className='name'>{thisName}</h4>
             <div className='navbarBtns'>
               <button className='homeBtn'
                       onClick={() => {
@@ -255,7 +254,6 @@ export const FriendsPage = () => {
           <ul>{renderGameInvites()}</ul>
         )}
       </div>
-      {error ? <p>Error: {error}</p> : null}
         </>
       </div>
       </div>
