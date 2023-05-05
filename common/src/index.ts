@@ -4,7 +4,7 @@ export enum team {
 }
 
 export type entityType = 'child' | 'death' | 'devil' | 'dwarf' | 'flag'  | 'knight'
-  | 'mommy' | 'ninja' | 'odin' | 'thor' | 'troll' | 'vampire' | 'viking' | 'wizard';
+  | 'mommy' | 'ninja' | 'odin' | 'thor' | 'troll' | 'viking' | 'wizard';
 export class Board {
   public board: Cell[][];
 
@@ -129,44 +129,45 @@ export class Entity {
     this.isVisible = true;
     const minePosition = this.getPosition(board);
     const enemyPosition = enemyEntity.getPosition(board);
-    const team = this.team;
-    this.upgrade(board, enemyEntity, minePosition, enemyPosition, team);
     if (this.type === "dwarf" && enemyEntity.type === "troll"){
-      this.victory(board,enemyEntity);
-    }
-    else if (this.type === "troll" && enemyEntity.type === "dwarf"){
-      this.kill(board, minePosition);
-    }
-    else if (this.type === "death" && enemyEntity.type !== "mommy"){
-      this.kill(board, minePosition);
-      this.kill(board, enemyPosition);
-    }
-    else if (this.type === "death" && enemyEntity.type === "mommy"){
-      this.kill(board, minePosition);
-    }
-    else if (this.type === "mommy" && enemyEntity.type !== "vampire"){
-      this.victory(board,enemyEntity);
-    }
-    else if (this.type === "mommy" && enemyEntity.type === "vampire"){
+      enemyEntity.kill(board, enemyPosition);
+      this.set(board,enemyPosition);
       this.kill(board, minePosition);
     }
     else if (this.type === "devil"){
-      const type = enemyEntity.type;
       this.kill(board, minePosition);
       board.getCell(minePosition.x, minePosition.y).entity = EntityFactory.createEntity(enemyEntity.type, this.team);
     }
-    else if (this.level > enemyEntity.level){
-      this.victory(board,enemyEntity);
+    else if (this.type === "death"){
+      this.kill(board, minePosition);
+      if (enemyEntity.type === "devil"){
+        board.getCell(enemyPosition.x, enemyPosition.y).entity = EntityFactory.createEntity(this.type, enemyEntity.team);
+      }
+      else if (enemyEntity.type !== 'mommy'){
+        this.kill(board, enemyPosition);}
     }
-    else if (this.level <= enemyEntity.level){
+    else if (this.type === "troll"){
+      if (enemyEntity.type === "dwarf" || enemyEntity.type === "mommy")
+      this.kill(board, minePosition);
+      else {enemyEntity.kill(board, enemyPosition);}
+    }
+    else if (this.level >= enemyEntity.level){
+      this.kill(board, enemyPosition);
+      this.set(board,enemyPosition);
+      if (this.type === "child" || this.type === 'knight' || this.type === "viking" || this.type === 'thor'){
+        this.upgrade(board, this, enemyPosition);
+      }
       this.kill(board, minePosition);
     }
-  }
-  public victory(board: Board, enemyEntity: Entity,) {
-    const minePosition = this.getPosition(board);
-    const enemyPosition = enemyEntity.getPosition(board);
-    enemyEntity.kill(board,enemyPosition);
-    this.set(board,minePosition);
+    else if (this.level < enemyEntity.level){
+      this.kill(board, minePosition);
+      if (enemyEntity.type === "child" || enemyEntity.type === 'knight' || enemyEntity.type === "viking" || enemyEntity.type === 'thor') {
+        this.upgrade(board, enemyEntity, enemyPosition);
+      }
+      if (enemyEntity.type === 'flag'){
+        // won the game func
+      }
+      }
   }
 
   public kill(board: Board, currPos: Position) {
@@ -177,22 +178,18 @@ export class Entity {
     board.getCell(currPos.x, currPos.y).entity = this;
   }
 
-  public upgrade(board: Board, enemyEntity: Entity, minePosition: Position, enemyPosition: Position, team: team) {
-    if(this.type === "child" && enemyEntity.level <= this.level){
-      this.kill(board,minePosition);
-      board.getCell(enemyPosition.x, enemyPosition.y).entity = new Knight(team);
+  public upgrade(board: Board, entity: Entity, position: Position) {
+    if(entity.type === "child"){
+      board.getCell(position.x, position.y).entity = new Knight(entity.team);
     }
-    else if(this.type === "knight" && enemyEntity.level < this.level){
-      this.kill(board,minePosition);
-      board.getCell(enemyPosition.x, enemyPosition.y).entity = new Viking(team);
+    else if(entity.type === "knight"){
+      board.getCell(position.x, position.y).entity = new Viking(entity.team);
     }
-    else if(this.type === "viking" && enemyEntity.level < this.level){
-      this.kill(board,minePosition);
-      board.getCell(enemyPosition.x, enemyPosition.y).entity = new Thor(team);
+    else if(entity.type === "viking"){
+      board.getCell(position.x, position.y).entity = new Thor(entity.team);
     }
-    else if(this.type === "thor" && enemyEntity.level < this.level){
-      this.kill(board,minePosition);
-      board.getCell(enemyPosition.x, enemyPosition.y).entity = new Odin(team);
+    else if(entity.type === "thor"){
+      board.getCell(position.x, position.y).entity = new Odin(entity.team);
     }
   }
 
@@ -226,7 +223,7 @@ export class Devil extends Entity {
     super();
     this.type = 'devil';
     this.team = team;
-    this.level = 50;
+    this.level = 1;
   }
 }
 
@@ -267,7 +264,7 @@ export class Mommy extends Entity {
     super();
     this.type = 'mommy';
     this.team = team;
-    this.level = 15;
+    this.level = 8;
   }
   public override getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
     return new MarkerBoard();
@@ -320,15 +317,6 @@ export class Troll extends Entity {
     super();
     this.type = 'troll';
     this.team = team;
-    this.level = 10;
-  }
-}
-
-export class Vampire extends Entity {
-  constructor(team: team) {
-    super();
-    this.type = 'vampire';
-    this.team = team;
     this.level = 7;
   }
 }
@@ -351,7 +339,7 @@ export class Wizard extends Entity {
     super();
     this.type = 'wizard';
     this.team = team;
-    this.level = 0.5;
+    this.level = 1;
     this.hide = 2;
     this.train = 5;
     this.reveal = 1;
@@ -397,8 +385,6 @@ static createEntity(type: string, team: team): Entity {
         return new Thor(team);
       case 'troll':
         return new Troll(team);
-      case 'vampire':
-        return new Vampire(team);
       case 'viking':
         return new Viking(team);
       case 'wizard':
@@ -570,10 +556,10 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    // instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 1, child: 0 };
-    instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, vampire: 0, viking:0, wizard: 1, child: 0 };
-    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, vampire: 0, viking:0, wizard: 1, child: 0 };
+    instance.blueTeam.piecesSetup = {death:0, devil: 1, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
+    // instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    // instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = {death:0, devil: 1, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;
@@ -614,15 +600,7 @@ export class GameManagerFactory {
     }
 
     let restored: Entity;
-    switch (entity.type) {
-      case 'child':
         restored = new Child(entity.team);
-        break;
-      case 'child':
-        restored = new Child(entity.team);
-        break;
-    }
-
     restored.isVisible = entity.isVisible;
     return restored;
   }

@@ -32,3 +32,14 @@ export const getUid = async (email: string) => {
   }
   return results.docs[0].id;
 };
+
+export const getDoc = async (uid: string) => {
+  const dbService = new DbService();
+  const currentUserRef = dbService.getUsersCollection();
+  const doc = await currentUserRef.doc(uid).get();
+  if (!doc.exists) {
+    throw new Error("Document does not exist.");
+  }
+  return doc.data();
+  return uid;
+};

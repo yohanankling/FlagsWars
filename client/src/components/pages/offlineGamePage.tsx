@@ -28,7 +28,7 @@ import {
 } from 'common';
 const user = auth.currentUser;
 let name = "YOU";
-if (user){let name = user.displayName;}
+if (user){name = user.displayName;}
 const board = require('../../icons/board.png');
 
 
