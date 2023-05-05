@@ -19,9 +19,9 @@ export const ProfilePage = () => {
   const email = user.email;
   const uid = user.uid;
   let doc;
-  const [friends, setFriends] = useState(0);
-  const [won, setWon] = useState(0);
-  const [lose, setLose] = useState(0);
+  const [friends, setFriends] = useState();
+  const [won, setWon] = useState();
+  const [lose, setLose] = useState();
 
   const fetchDoc = async () => {
     try {

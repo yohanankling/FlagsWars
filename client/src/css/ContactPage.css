@@ -1,0 +1,25 @@
+.business-card {
+    position: absolute;
+    width: 20em;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+p{
+    text-align: center;
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 10px;
+}
+
+.link {
+    margin: 0 10px;
+}
