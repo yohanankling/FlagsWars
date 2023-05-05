@@ -19,14 +19,17 @@ export const ProfilePage = () => {
   const email = user.email;
   const uid = user.uid;
   let doc;
-  let friends;
+  const [friends, setFriends] = useState(0);
+  const [won, setWon] = useState(0);
+  const [lose, setLose] = useState(0);
 
   const fetchDoc = async () => {
     try {
       const res = await send({ method: 'POST', route: '/getDoc', data: { uid: uid } });
       doc = res.data;
-      friends = doc.email;
-      alert(doc.friends);
+      setFriends(doc.friends.length);
+      // setFriends(doc.friends.won);
+      // setFriends(doc.friends.lose);
     } catch (error: any) {
       console.error(error);}
   };
@@ -87,11 +90,11 @@ export const ProfilePage = () => {
               </tr>
               <tr>
                 <td>win</td>
-                <td>1</td>
+                <td>{won}</td>
               </tr>
               <tr>
                 <td>lose</td>
-                <td>1</td>
+                <td>{lose}</td>
               </tr>
             </table>
           </div>
