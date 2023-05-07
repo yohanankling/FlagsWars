@@ -216,7 +216,7 @@ export const FriendsPage = () => {
           {users.map((user, i) => {
             return (
               <li key={i}>
-                {user.email}{' '}
+                {user.email}{' '}{user.uid}
                 <button
                   className='invite-button'
                   onClick={() => {

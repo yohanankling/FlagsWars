@@ -391,11 +391,6 @@ const OfflineGamePage = () => {
     setSelectedEntity(null);
   };
 
-  /**
-   * MEGA CODE
-   * returns the random move
-   * @param t
-   */
   const execRandomMove = (t: Team) => {
     const currentTeamOnBoardEntities: { entity: Entity; pos: { x: number; y: number } }[] = [];
     for (let i = 0; i < 8; i++) {

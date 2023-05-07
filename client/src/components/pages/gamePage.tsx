@@ -136,6 +136,9 @@ interface selectedEntity {
 }
 
 const GamePage = () => {
+  let isFinished: boolean = true;
+  let isReady: boolean = false;
+  let isWaiting: boolean = false;
   const user = auth.currentUser;
   let name = "YOU";
   if (user){name = user.displayName;}
@@ -204,7 +207,7 @@ const GamePage = () => {
     const trollImage = currentTeam === team.blue ? troll_blue : troll_red;
     const mommyImage = currentTeam === team.blue ? mommy_blue : mommy_red;
     const ninjaImage = currentTeam === team.blue ? ninja_blue : ninja_red;
-    let isFinished: boolean = true;
+    isFinished = true;
     for (const k in currentTeamPiecesSetup) {
       let key = k as entityType;
       if (currentTeamPiecesSetup[key] !== 0) {
@@ -215,141 +218,148 @@ const GamePage = () => {
 
     return (
       <div>
-        <div className="icons">
-          <br/>
-          {currentTeamPiecesSetup.dwarf === 0 ? null :
-            <img className="image"
-                 src={dwarfImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Dwarf(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+        {!isFinished && !isReady ? (
+          <div className="icons">
+            <br/>
+            {currentTeamPiecesSetup.dwarf === 0 ? null :
+              <img className="image"
+                   src={dwarfImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Dwarf(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          {currentTeamPiecesSetup.death === 0 ? null :
-            <img className="image"
-                 src={deathImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Death(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            {currentTeamPiecesSetup.death === 0 ? null :
+              <img className="image"
+                   src={deathImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Death(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          {currentTeamPiecesSetup.devil === 0 ? null :
-            <img className="image"
-                 src={devilImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Devil(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            {currentTeamPiecesSetup.devil === 0 ? null :
+              <img className="image"
+                   src={devilImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Devil(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          {currentTeamPiecesSetup.flag === 0 ? null :
-            <img className="image"
-                 src={flagImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Flag(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            {currentTeamPiecesSetup.flag === 0 ? null :
+              <img className="image"
+                   src={flagImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Flag(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          <br/>
-          {currentTeamPiecesSetup.mommy === 0 ? null :
-            <img className="image"
-                 src={mommyImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Mommy(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            <br/>
+            {currentTeamPiecesSetup.mommy === 0 ? null :
+              <img className="image"
+                   src={mommyImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Mommy(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          {currentTeamPiecesSetup.ninja === 0 ? null :
-            <img className="image"
-                 src={ninjaImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Ninja(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            {currentTeamPiecesSetup.ninja === 0 ? null :
+              <img className="image"
+                   src={ninjaImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Ninja(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          {currentTeamPiecesSetup.wizard === 0 ? null :
-            <img className="image"
-                 src={wizardImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Wizard(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            {currentTeamPiecesSetup.wizard === 0 ? null :
+              <img className="image"
+                   src={wizardImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Wizard(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-          {currentTeamPiecesSetup.troll === 0 ? null :
-            <img className="image"
-                 src={trollImage}
-                 onClick={() => {
-                   const t = getTeam(currentTeam);
-                   setSelectedEntity({ entity: new Troll(t.team), x: -1, y: -1 });
-                   const highlightBoard = new MarkerBoard();
-                   for (let i = 0; i < 8; i++) {
-                     if (!gameManager.board.getCell(i, 7).entity) {
-                       highlightBoard.setHighlight(i, 7);
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+            {currentTeamPiecesSetup.troll === 0 ? null :
+              <img className="image"
+                   src={trollImage}
+                   onClick={() => {
+                     const t = getTeam(currentTeam);
+                     setSelectedEntity({ entity: new Troll(t.team), x: -1, y: -1 });
+                     const highlightBoard = new MarkerBoard();
+                     for (let i = 0; i < 8; i++) {
+                       if (!gameManager.board.getCell(i, 7).entity) {
+                         highlightBoard.setHighlight(i, 7);
+                       }
                      }
-                   }
-                   setHighlightBoard(highlightBoard);
-                 }}
-            />
-          }
-        </div>
+                     setHighlightBoard(highlightBoard);
+                   }}
+              />
+            }
+          </div>
+        ) : null}
         {isFinished ? (
           <div>
             <button onClick={handleReadyClick}>Ready</button>
+          </div>
+        ) : null}
+        {isWaiting  ? (
+          <div>
+            <div id="spinner" className="spinner" style={{display: isWaiting ? 'block' : 'none'}}></div>
           </div>
         ) : null}
       </div>
@@ -368,7 +378,10 @@ const GamePage = () => {
     setReady(id as string, setupEntities);
     await gameManager.setReady(getTeam(currentTeam));
     setSelectedEntity(null);
+    isFinished = true;
+    isWaiting = true;
   };
+
 
   const renderPieceImage = (entity: Entity) => {
     if (entity == null) return null;
@@ -378,10 +391,10 @@ const GamePage = () => {
 
     return (
       <div className="image-container">
-        <img width={45} height={40} src={(entity as any).constructor?.getImage(entity)} />
-        {entity.isVisible && entity.team === getTeam(currentTeam).team ? (
-          <img width={15} height={15} src={eyeImage} className="small-image" />
-        ) : null}
+        <img className="image" src={(entity as any).constructor?.getImage(entity)} />
+        {/*{entity.isVisible && entity.team === currentTeam.team ? (*/}
+        {/*  <img className="eye" src={eyeImage} />*/}
+        {/*) : null}*/}
       </div>
     );
   };

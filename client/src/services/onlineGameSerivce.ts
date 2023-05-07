@@ -1,4 +1,4 @@
-import { Entity, Position } from 'common';
+import { Entity } from 'common';
 import { send } from './httpContext';
 
 interface IPos {

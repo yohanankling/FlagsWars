@@ -1,11 +1,7 @@
-import { app, auth, firebaseDb, firestoreDb } from '..';
+import { app, firebaseDb } from '..';
 import { RequestWithUser, authMiddleware } from '../middlewares/auth';
-import admin from 'firebase-admin';
-import { getDatabase } from 'firebase-admin/database';
 import { FieldValue } from 'firebase-admin/firestore';
 import { Entity, GameManagerFactory, IGameDetails, Position, Team, team } from 'common';
-
-import { DbService } from '../services/dbService';
 import { rejectGameInvite } from '../services/gameInviteService';
 import { Response } from 'express';
 import { updateGameData } from '../services/gameService';
