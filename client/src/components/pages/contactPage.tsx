@@ -49,6 +49,7 @@ export const ContactPage = () => {
               <button className='logoutBtn'
                       onClick={() => {
                         authService.signOut();
+                        navigate('/');
                       }}>
                 <img src={logoutImg} alt='Logout' />
               </button>

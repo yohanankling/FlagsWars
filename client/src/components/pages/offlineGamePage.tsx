@@ -26,11 +26,16 @@ import {
   Viking,
   Wizard,
 } from 'common';
+import authService from '../../services/authService';
+import { useNavigate } from 'react-router-dom';
 const user = auth.currentUser;
 let name = "YOU";
 if (user){name = user.displayName;}
+const contactImg = require('../../icons/contact.png');
+const logoutImg = require('../../icons/logout.png');
+const profileImg = require('../../icons/profile.png');
+const homeImg = require('../../icons/home.png');
 const board = require('../../icons/board.png');
-
 
 const child_blue = require('../../assets/child_blue.png');
 const child_red = require('../../assets/child_red.png');
@@ -126,6 +131,7 @@ interface selectedEntity {
 }
 
 const OfflineGamePage = () => {
+  const navigate = useNavigate();
   const [gameManager, setGameManager] = useState(GameManagerFactory.initGameManager());
   const [currentTeam, setCurrentTeam] = useState(gameManager.redTeam);
   const [selectedEntity, setSelectedEntity] = useState<selectedEntity | null>(null);
@@ -432,7 +438,36 @@ const OfflineGamePage = () => {
     <div className={"background"}>
       <img className={"background"} src={board} alt={"background"}/>
       <div className={"cover"}>
-        <h1 className="title">{name} vs A M-A-C-H-I-N-E !</h1>
+        <div className='navbar'>
+          <h4 className='name'>{name} vs A M-A-C-H-I-N-E !</h4>
+          <div className='navbarBtns'>
+            <button className='homeBtn'
+                    onClick={() => {
+                      navigate('/');
+                    }}>
+              <img src={homeImg} alt='Home' />
+            </button>
+            <button className='contactBtn'
+                    onClick={() => {
+                      navigate('/contact');
+                    }}>
+              <img src={contactImg} alt='Contact' />
+            </button>
+            <button className='profileBtn'
+                    onClick={() => {
+                      navigate('/profile');
+                    }}>
+              <img className='profileImg' src={profileImg} alt='Profile' />
+            </button>
+            <button className='logoutBtn'
+                    onClick={() => {
+                      authService.signOut();
+                      navigate('/');
+                    }}>
+              <img src={logoutImg} alt='Logout' />
+            </button>
+          </div>
+        </div>
       <div className="board">
         {gameManager.board.board?.map((row: Cell[], y: number) => (
           <div key={y} className="row">

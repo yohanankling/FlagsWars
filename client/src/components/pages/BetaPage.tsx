@@ -44,6 +44,7 @@ export const BetaPage = () => {
     <button className='logoutBtn'
   onClick={() => {
     authService.signOut();
+    navigate('/');
   }}>
   <img src={logoutImg} alt='Logout' />
     </button>

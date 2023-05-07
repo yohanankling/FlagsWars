@@ -372,8 +372,6 @@ const GamePage = () => {
 
   const renderPieceImage = (entity: Entity) => {
     if (entity == null) return null;
-    // const image = entity.team === team.blue ? entity.image.blue : entity.image.red;
-
     if (entity.team !== getTeam(currentTeam).team && !entity.isVisible) {
       return <p>?</p>;
     }
@@ -477,6 +475,7 @@ const GamePage = () => {
               <button className='logoutBtn'
                       onClick={() => {
                         authService.signOut();
+                        navigate('/');
                       }}>
                 <img src={logoutImg} alt='Logout' />
               </button>
