@@ -108,7 +108,6 @@ export const FriendsPage = () => {
 
       return (
         <li>
-          <p>Uid: {game.id}</p>
           {gameStatusHandler()}
         </li>
       );
