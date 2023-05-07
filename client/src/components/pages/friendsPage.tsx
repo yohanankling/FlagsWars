@@ -11,6 +11,8 @@ const logoutImg = require('../../icons/logout.png');
 const profileImg = require('../../icons/profile.png');
 const homeImg = require('../../icons/home.png');
 const board = require('../../icons/board.png');
+const x = require('../../icons/x.png');
+const v = require('../../icons/v.png');
 
 export const FriendsPage = () => {
   const navigate = useNavigate();
@@ -78,20 +80,20 @@ export const FriendsPage = () => {
                 ) : (
                   <>
                     <p>You friend is waiting for you to accept their invite</p>
-                    <button
+                    <div className="game-buttons">
+                    <button className='clear'
                       onClick={() => {
                         answerGameInviteHandler(true, game.id);
                       }}
-                    >
-                      Accept
+                    ><img src={v} alt="accept"/>
                     </button>
-                    <button
-                      onClick={() => {
+                    <button className='clear'
+                            onClick={() => {
                         answerGameInviteHandler(false, game.id);
                       }}
-                    >
-                      Reject
+                    ><img src={x} alt="reject"/>
                     </button>
+                    </div>
                   </>
                 )}
               </div>
