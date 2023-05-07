@@ -137,13 +137,12 @@ interface selectedEntity {
 
 const GamePage = () => {
   let isFinished: boolean = true;
-  let isReady: boolean = false;
-  let isWaiting: boolean = false;
   const user = auth.currentUser;
   let name = "YOU";
   if (user){name = user.displayName;}
   const navigate = useNavigate();
   const [vsName, setVsName] = useState("");
+  const [isReady, setIsReady] = useState(false);
   const { id } = useParams();
   const [gameDetails, setGameDetails] = useState<{
     player1: { id: string; team: team };
@@ -216,11 +215,12 @@ const GamePage = () => {
       }
     }
 
+
     return (
       <div>
         {!isFinished && !isReady ? (
           <div className="icons">
-            <br/>
+            <br />
             {currentTeamPiecesSetup.dwarf === 0 ? null :
               <img className="image"
                    src={dwarfImage}
@@ -285,7 +285,7 @@ const GamePage = () => {
                    }}
               />
             }
-            <br/>
+            <br />
             {currentTeamPiecesSetup.mommy === 0 ? null :
               <img className="image"
                    src={mommyImage}
@@ -357,14 +357,15 @@ const GamePage = () => {
             <button onClick={handleReadyClick}>Ready</button>
           </div>
         ) : null}
-        {isWaiting  ? (
-          <div>
-            <div id="spinner" className="spinner" style={{display: isWaiting ? 'block' : 'none'}}></div>
+        {isReady ? (
+          <div className='spinner-div'  style={{display: isReady ? 'block' : 'none'}}>
+            waiting your opponent to choose...
+            <div id="spinner" className="spinner"></div>
           </div>
         ) : null}
       </div>
     );
-  };
+  }
 
   const getTeam = (t: team) => {
     if (t === team.blue) {
@@ -379,7 +380,7 @@ const GamePage = () => {
     await gameManager.setReady(getTeam(currentTeam));
     setSelectedEntity(null);
     isFinished = true;
-    isWaiting = true;
+    setIsReady(true);
   };
 
 
