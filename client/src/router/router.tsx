@@ -11,6 +11,7 @@ import OfflineGamePage from '../components/pages/offlineGamePage';
 import { WelcomePage } from '../components/pages/welcomePage';
 import { ProfilePage } from '../components/pages/profilePage';
 import { ContactPage } from '../components/pages/contactPage';
+import { BetaPage } from '../components/pages/BetaPage';
 
 export const AppRouter = () => {
   const [currentUser, setCurrentUser] = useState(auth.currentUser);
@@ -34,6 +35,7 @@ export const AppRouter = () => {
             <Route path="/friends" element={<FriendsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/beta" element={<BetaPage />} />
             <Route path="/game/:id" element={<GamePage />} />
             <Route path="/offline" element={<OfflineGamePage />} />
           </>

@@ -13,6 +13,7 @@ const board = require('../../icons/board.png');
 export const HomePage = () => {
   const navigate = useNavigate();
   const user = auth.currentUser;
+  const email = user.email;
   let name = user.displayName;
 
   return (
@@ -66,6 +67,12 @@ export const HomePage = () => {
           onClick={() => {navigate('/scores');}}>
           Tables
         </button>
+          {email === "yohanankli@gmail.com" && (
+            <button
+              className="adminBtn"
+              onClick={() => {navigate('/beta');}}>
+              Admin
+            </button>)}
         </div>
       </>
     </div>
