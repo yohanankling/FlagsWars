@@ -38,10 +38,6 @@ const contactImg = require('../../icons/contact.png');
 const logoutImg = require('../../icons/logout.png');
 const profileImg = require('../../icons/profile.png');
 const homeImg = require('../../icons/home.png');
-
-const user = auth.currentUser;
-let name = "YOU";
-if (user){name = user.displayName;}
 const board = require('../../icons/board.png');
 
 
@@ -140,6 +136,9 @@ interface selectedEntity {
 }
 
 const GamePage = () => {
+  const user = auth.currentUser;
+  let name = "YOU";
+  if (user){name = user.displayName;}
   const navigate = useNavigate();
   const [vsName, setVsName] = useState("");
   const { id } = useParams();
@@ -171,9 +170,7 @@ const GamePage = () => {
     try {
       const res = await send({ method: 'POST', route: '/getDoc', data: { uid: fetchUid } });
       let doc = res.data;
-      // alert(fetchUid)
-      // setVsName(doc.name);
-      // setVsName("aaa");
+      setVsName(doc.name);
     } catch (error: any) {
       console.error(error);}
   };
