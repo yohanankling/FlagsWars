@@ -9,6 +9,7 @@ TODO :: finish profile page
 TODO :: add tables and statistics page
 TODO :: design tables page
 TODO :: fix cursor when set up the game
+TODO :: set win and lose to firestore doc
 
 80:
 TODO :: set scalability to server
