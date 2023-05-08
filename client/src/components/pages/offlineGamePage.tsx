@@ -17,12 +17,11 @@ import {
   MarkerBoard,
   Mommy,
   Ninja,
-  Odin,
+  Odin, Position,
   Team,
   team,
   Thor,
   Troll,
-  Vampire,
   Viking,
   Wizard,
 } from 'common';
@@ -59,8 +58,6 @@ const thor_blue = require('../../assets/thor_blue.png');
 const thor_red = require('../../assets/thor_red.png');
 const troll_blue = require('../../assets/troll_blue.png');
 const troll_red = require('../../assets/troll_red.png');
-const vampire_blue = require('../../assets/vampire_blue.png');
-const vampire_red = require('../../assets/vampire_red.png');
 const viking_blue = require('../../assets/viking_blue.png');
 const viking_red = require('../../assets/viking_red.png');
 const wizard_blue = require('../../assets/wizard_blue.png');
@@ -112,10 +109,6 @@ Troll.getImage = function (entity) {
   return entity.team === team.blue ? troll_blue : troll_red;
 };
 
-Vampire.getImage = function (entity) {
-  return entity.team === team.blue ? vampire_blue : vampire_red;
-};
-
 Viking.getImage = function (entity) {
   return entity.team === team.blue ? viking_blue : viking_red;
 };
@@ -149,9 +142,9 @@ const OfflineGamePage = () => {
     return (
       <div className="image-container">
         <img className="image" src={(entity as any).constructor?.getImage(entity)} />
-        {/*{entity.isVisible && entity.team === currentTeam.team ? (*/}
-        {/*  <img className="eye" src={eyeImage} />*/}
-        {/*) : null}*/}
+        {entity.isVisible && entity.team === currentTeam.team ? (
+          <img className="eye" src={eyeImage} />
+        ) : null}
       </div>
     );
   };
@@ -171,12 +164,44 @@ const OfflineGamePage = () => {
     // handle game clicks
     else if (gameManager.setupFinished) {
       if (cell.entity?.team === currentTeam.team) {
+        if (selectedEntity?.entity.type === 'wizard'){
+          let wizard = selectedEntity.entity as Wizard;
+            if (wizard.train > 0){
+            if (cell.entity.type === "child" || cell.entity.type === "knight" || cell.entity.type === "viking" || cell.entity.type === "thor"){
+              let p = new Position();
+              p.x = cell.x;
+              p.y = cell.y;
+              cell.entity.upgrade(gameManager.board, cell.entity, p);
+              wizard.train--;
+              setSelectedEntity(null);
+              const gmClone = GameManagerFactory.getClone(gameManager);
+              setGameManager(gmClone);
+              setHighlightBoard(new MarkerBoard());
+            }
+          }
+            else {alert("wizard can't train anymore")}
+        }
+        if (!selectedEntity || selectedEntity.entity.type !== 'wizard') {
         setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
         const highlightBoard = cell.entity.getPossibleMoves?.(cell.x, cell.y, gameManager.board) as MarkerBoard;
         highlightBoard.setHighlight(cell.x, cell.y);
-
         setHighlightBoard(highlightBoard);
-      } else if (selectedEntity) {
+      }
+      }
+        else if (selectedEntity) {
+          if(selectedEntity.entity.type === "wizard"){
+            let wizard = selectedEntity.entity as Wizard;
+            if(!cell?.entity.isVisible && wizard.reveal>0){
+              cell.entity.isVisible = true;
+              wizard.reveal--;
+              const gmClone = GameManagerFactory.getClone(gameManager);
+              setGameManager(gmClone);
+              setHighlightBoard(new MarkerBoard());
+            }
+            else if (wizard.reveal===0){
+              alert("wizard cant reveal anymore")
+            }
+          }
         try {
           gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
 

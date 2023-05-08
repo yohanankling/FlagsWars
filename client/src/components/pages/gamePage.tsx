@@ -26,7 +26,6 @@ import {
   Team,
   Thor,
   Troll,
-  Vampire,
   Viking,
   Wizard,
 } from 'common';
@@ -63,8 +62,6 @@ const thor_blue = require('../../assets/thor_blue.png');
 const thor_red = require('../../assets/thor_red.png');
 const troll_blue = require('../../assets/troll_blue.png');
 const troll_red = require('../../assets/troll_red.png');
-const vampire_blue = require('../../assets/vampire_blue.png');
-const vampire_red = require('../../assets/vampire_red.png');
 const viking_blue = require('../../assets/viking_blue.png');
 const viking_red = require('../../assets/viking_red.png');
 const wizard_blue = require('../../assets/wizard_blue.png');
@@ -114,10 +111,6 @@ Thor.getImage = function (entity) {
 
 Troll.getImage = function (entity) {
   return entity.team === team.blue ? troll_blue : troll_red;
-};
-
-Vampire.getImage = function (entity) {
-  return entity.team === team.blue ? vampire_blue : vampire_red;
 };
 
 Viking.getImage = function (entity) {
