@@ -100,7 +100,6 @@ Ninja.getImage = function (entity) {
   return entity.team === team.blue ? ninja_blue : ninja_red;
 };
 
-
 Odin.getImage = function (entity) {
   return entity.team === team.blue ? odin_blue : odin_red;
 };
@@ -112,6 +111,7 @@ Thor.getImage = function (entity) {
 Troll.getImage = function (entity) {
   return entity.team === team.blue ? troll_blue : troll_red;
 };
+
 
 Viking.getImage = function (entity) {
   return entity.team === team.blue ? viking_blue : viking_red;
@@ -132,6 +132,7 @@ const GamePage = () => {
   let isFinished: boolean = true;
   const user = auth.currentUser;
   let name = "YOU";
+  // against name required
   if (user){name = user.displayName;}
   const navigate = useNavigate();
   const [vsName, setVsName] = useState("");
@@ -380,15 +381,18 @@ const GamePage = () => {
   const renderPieceImage = (entity: Entity) => {
     if (entity == null) return null;
     if (entity.team !== getTeam(currentTeam).team && !entity.isVisible) {
-      return <p>?</p>;
+      if (entity.team === team.blue){
+        return <img className="image" src={child_blue}></img>;
+      }
+      else {return <img className="image" src={child_red}></img>;}
     }
 
     return (
       <div className="image-container">
         <img className="image" src={(entity as any).constructor?.getImage(entity)} />
-        {/*{entity.isVisible && entity.team === currentTeam.team ? (*/}
-        {/*  <img className="eye" src={eyeImage} />*/}
-        {/*) : null}*/}
+        {entity.isVisible && entity.team === currentTeam ? (
+          <img className="eye" src={eyeImage} />
+        ) : null}
       </div>
     );
   };
@@ -413,12 +417,44 @@ const GamePage = () => {
     // handle game clicks
     else if (gameManager.setupFinished) {
       if (cell.entity?.team === currentTeam) {
-        setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
-        const highlightBoard = cell.entity.getPossibleMoves?.(cell.x, cell.y, gameManager.board) as MarkerBoard;
-        highlightBoard.setHighlight(cell.x, cell.y);
-
-        setHighlightBoard(highlightBoard);
-      } else if (selectedEntity) {
+        if (selectedEntity?.entity.type === 'wizard'){
+          let wizard = selectedEntity.entity as Wizard;
+          if (wizard.train > 0){
+            if (cell.entity.type === "child" || cell.entity.type === "knight" || cell.entity.type === "viking" || cell.entity.type === "thor"){
+              let p = new Position();
+              p.x = cell.x;
+              p.y = cell.y;
+              cell.entity.upgrade(gameManager.board, cell.entity, p);
+              wizard.train--;
+              setSelectedEntity(null);
+              const gmClone = GameManagerFactory.getClone(gameManager);
+              setGameManager(gmClone);
+              setHighlightBoard(new MarkerBoard());
+            }
+          }
+          else {alert("wizard can't train anymore")}
+        }
+        if (!selectedEntity || selectedEntity.entity.type !== 'wizard') {
+          setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
+          const highlightBoard = cell.entity.getPossibleMoves?.(cell.x, cell.y, gameManager.board) as MarkerBoard;
+          highlightBoard.setHighlight(cell.x, cell.y);
+          setHighlightBoard(highlightBoard);
+        }
+      }
+      else if (selectedEntity) {
+        if(selectedEntity.entity.type === "wizard"){
+          let wizard = selectedEntity.entity as Wizard;
+          if(!cell?.entity.isVisible && wizard.reveal>0){
+            cell.entity.isVisible = true;
+            wizard.reveal--;
+            const gmClone = GameManagerFactory.getClone(gameManager);
+            setGameManager(gmClone);
+            setHighlightBoard(new MarkerBoard());
+          }
+          else if (wizard.reveal===0){
+            alert("wizard cant reveal anymore")
+          }
+        }
         try {
           // gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
           await move(id, { x: selectedEntity.x, y: selectedEntity.y }, { x: cell.x, y: cell.y });
