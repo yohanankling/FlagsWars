@@ -603,7 +603,48 @@ export class GameManagerFactory {
     }
 
     let restored: Entity;
+    switch (entity.type) {
+      case 'child':
         restored = new Child(entity.team);
+        break;
+      case 'death':
+        restored = new Death(entity.team);
+        break;
+      case 'devil':
+        restored = new Devil(entity.team);
+        break;
+      case 'dwarf':
+        restored = new Dwarf(entity.team);
+        break;
+      case 'flag':
+        restored = new Flag(entity.team);
+        break;
+      case 'knight':
+        restored = new Knight(entity.team);
+        break;
+      case 'mommy':
+        restored = new Mommy(entity.team);
+        break;
+      case 'ninja':
+        restored = new Ninja(entity.team);
+        break;
+      case 'odin':
+        restored = new Odin(entity.team);
+        break;
+      case 'thor':
+        restored = new Thor(entity.team);
+        break;
+      case 'troll':
+        restored = new Troll(entity.team);
+        break;
+      case 'viking':
+        restored = new Viking(entity.team);
+        break;
+      case 'wizard':
+        restored = new Wizard(entity.team);
+        break;
+    }
+
     restored.isVisible = entity.isVisible;
     return restored;
   }
