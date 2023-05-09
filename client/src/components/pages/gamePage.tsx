@@ -432,7 +432,10 @@ const GamePage = () => {
               setHighlightBoard(new MarkerBoard());
             }
           }
-          else {alert("wizard can't train anymore")}
+          else {
+            alert("wizard can't train anymore")
+            setSelectedEntity(null);
+          }
         }
         if (!selectedEntity || selectedEntity.entity.type !== 'wizard') {
           setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
@@ -452,11 +455,10 @@ const GamePage = () => {
             setHighlightBoard(new MarkerBoard());
           }
           else if (wizard.reveal===0){
-            alert("wizard cant reveal anymore")
+            alert("wizard can't reveal anymore")
           }
         }
         try {
-          // gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
           await move(id, { x: selectedEntity.x, y: selectedEntity.y }, { x: cell.x, y: cell.y });
 
           setSelectedEntity(null);

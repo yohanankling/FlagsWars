@@ -76,14 +76,19 @@ export const gameController = () => {
 
       switch (moveType) {
         case 'set_ready':
-          //handle game is on setup mode.
-          //handle validation that all pieces placed
 
           req.body.payload.setupEntities?.map(({ entity, pos }) => {
             gm.setPiece(entity, pos);
           });
-
           gm.setReady(currTeam);
+          const data_game = GameManagerFactory.getData(gm);
+          if (!data_game.board[0][0].entity){
+            updateGameData(gameId, data_game);
+          }
+          else{
+            updateGameData(gameId, data_game);
+          }
+          // filter
           break;
         case 'exec_move':
           // handle current team turn
@@ -96,11 +101,11 @@ export const gameController = () => {
           } catch (error) {
             return res.send(error);
           }
+
+          const game_data = GameManagerFactory.getData(gm);
+          updateGameData(gameId, game_data);
           break;
       }
-
-      const game_data = GameManagerFactory.getData(gm);
-      updateGameData(gameId, game_data);
 
       res.send(200);
     },
