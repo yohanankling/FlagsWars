@@ -6,12 +6,15 @@ interface IPos {
   y: number;
 }
 
-export const setReady = async (gameId: string, setupEntities?: { entity: Entity; pos: IPos }[]) => {
-  await send({
-    method: 'POST',
-    route: '/game/move',
-    data: { type: 'set_ready', gameId, payload: { setupEntities } },
-  });
+export const setReady = async (gameId: string, setupEntities: { entity: Entity; pos: IPos }[]) => {
+  const data = {
+    type: 'set_ready',
+    gameId,
+    payload: {
+      setupEntities,
+    },
+  };
+  await send({ method: 'POST', route: '/game/move', data });
 };
 
 export const move = async (gameId: string, from: IPos, to: IPos) => {

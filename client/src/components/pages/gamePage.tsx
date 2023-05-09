@@ -368,14 +368,13 @@ const GamePage = () => {
       return gameManager.redTeam;
     }
   };
-  // alert(JSON.stringify(setupEntities));
 
   const handleReadyClick = async () => {
     await setReady(id as string, setupEntities);
-    // await gameManager.setReady(getTeam(currentTeam));
-    // setSelectedEntity(null);
-    // isFinished = true;
-    // setIsReady(true);
+    await gameManager.setReady(getTeam(currentTeam));
+    setSelectedEntity(null);
+    isFinished = true;
+    setIsReady(true);
   };
 
 
@@ -418,7 +417,6 @@ const GamePage = () => {
     // handle game clicks
     else if (gameManager.setupFinished) {
       if (cell.entity?.team === currentTeam) {
-        alert(cell.entity?.type)
         if (selectedEntity?.entity.type === 'wizard'){
           let wizard = selectedEntity.entity as Wizard;
           if (wizard.train > 0){
