@@ -24,3 +24,18 @@ export const move = async (gameId: string, from: IPos, to: IPos) => {
     data: { type: 'exec_move', gameId, payload: { move: { from, to } } },
   });
 };
+
+
+
+export const updateBoard = async (gameId: string, setupEntity: { entity: Entity; pos: IPos }) => {
+  const data = {
+    type: 'update',
+    gameId,
+    payload: {
+      setupEntity,
+    },
+  };
+
+  await send({ method: 'POST', route: '/game/move', data });
+}
+

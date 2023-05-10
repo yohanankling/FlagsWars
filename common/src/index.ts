@@ -186,6 +186,7 @@ export class Entity {
       }
       else {
       board.getCell(position.x, position.y).entity = new Knight(entity.team);}
+      return (new Knight(entity.team))
     }
     else if(entity.type === "knight"){
       if(entity.isVisible){
@@ -194,6 +195,7 @@ export class Entity {
       }
       else {
         board.getCell(position.x, position.y).entity = new Viking(entity.team);}
+      return (new Viking(entity.team))
     }
     else if(entity.type === "viking"){
       if(entity.isVisible){
@@ -202,6 +204,7 @@ export class Entity {
       }
       else {
         board.getCell(position.x, position.y).entity = new Thor(entity.team);}
+      return (new Thor(entity.team))
     }
     else if(entity.type === "thor"){
       if(entity.isVisible){
@@ -210,6 +213,7 @@ export class Entity {
       }
       else {
         board.getCell(position.x, position.y).entity = new Odin(entity.team);}
+      return (new Odin(entity.team))
     }
   }
 
@@ -456,11 +460,10 @@ export class GameManager {
     currentTeam.piecesSetup[entity.type] -= 1;
   }
 
-  public setPiece(entity: Entity, pos: Position) {
-    if (this.setupFinished) throw new Error('Setup is finished');
+  public setPiece(entity: Entity, pos: Position, flag: boolean) {
+    if (this.setupFinished && !flag) throw new Error('Setup is finished');
     const { x, y } = pos;
-
-    if (this.board.getCell(x, y).entity !== null) {
+    if (this.board.getCell(x, y).entity !== null && !flag) {
       throw new Error('Cannot place pieces where a piece is already placed');
     }
     this.board.getCell(x, y).entity = entity;
@@ -501,13 +504,13 @@ export class GameManager {
     if (this.blueTeam.isReady && this.redTeam.isReady) {
       for (let i = 0; i < 8; i++) {
         if (this.board.getCell(i, this.blueTeam.FIRST_COLUMN).entity == null) {
-          this.setPiece(new Child(team.blue), { x: i, y: this.blueTeam.FIRST_COLUMN });
+          this.setPiece(new Child(team.blue), { x: i, y: this.blueTeam.FIRST_COLUMN }, false);
         }
       }
 
       for (let i = 0; i < 8; i++) {
         if (this.board.getCell(i, this.redTeam.FIRST_COLUMN).entity == null) {
-          this.setPiece(new Child(team.red), { x: i, y: this.redTeam.FIRST_COLUMN });
+          this.setPiece(new Child(team.red), { x: i, y: this.redTeam.FIRST_COLUMN }, false);
         }
       }
 

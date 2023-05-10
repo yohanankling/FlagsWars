@@ -6,7 +6,7 @@ import { rejectGameInvite } from '../services/gameInviteService';
 import { Response } from 'express';
 import { updateGameData } from '../services/gameService';
 
-type moveType = 'set_ready' | 'exec_move';
+type moveType = 'set_ready' | 'exec_move' | 'update';
 
 export const gameController = () => {
   app.delete('/game', async (req: any, res) => {
@@ -50,6 +50,10 @@ export const gameController = () => {
               from: Position;
               to: Position;
             };
+            setupEntity?: {
+              entity: Entity;
+              pos: Position;
+            };
           };
         }
       >,
@@ -76,9 +80,8 @@ export const gameController = () => {
 
       switch (moveType) {
         case 'set_ready':
-
           req.body.payload.setupEntities?.map(({ entity, pos }) => {
-            gm.setPiece(entity, pos);
+            gm.setPiece(entity, pos, false);
           });
           gm.setReady(currTeam);
           const data_game = GameManagerFactory.getData(gm);
@@ -104,6 +107,20 @@ export const gameController = () => {
 
           const game_data = GameManagerFactory.getData(gm);
           updateGameData(gameId, game_data);
+          break;
+
+        case 'update':
+          try {
+            const a = req.body.payload.setupEntity?.entity;
+            const position = req.body.payload.setupEntity?.pos;
+            if (typeof a !== 'undefined' && typeof position !== 'undefined') {
+              gm.setPiece(a, position, true);
+              const data = GameManagerFactory.getData(gm);
+              updateGameData(gameId, data);
+            }
+          } catch (error) {
+            return res.send(error);
+          }
           break;
       }
 

@@ -29,7 +29,7 @@ import {
   Viking,
   Wizard,
 } from 'common';
-import { move, setReady } from '../../services/onlineGameSerivce';
+import { move, setReady, updateBoard } from '../../services/onlineGameSerivce';
 import React from 'react';
 import authService from '../../services/authService';
 import { send } from '../../services/httpContext';
@@ -424,8 +424,11 @@ const GamePage = () => {
               let p = new Position();
               p.x = cell.x;
               p.y = cell.y;
-              cell.entity.upgrade(gameManager.board, cell.entity, p);
+             const entity: Entity = cell.entity.upgrade(gameManager.board, cell.entity, p);
               wizard.train--;
+              if (entity) {
+                const setupEntity = { entity: entity, pos: p };
+              await updateBoard(id as string, setupEntity);}
               setSelectedEntity(null);
               const gmClone = GameManagerFactory.getClone(gameManager);
               setGameManager(gmClone);
@@ -460,7 +463,6 @@ const GamePage = () => {
         }
         try {
           await move(id, { x: selectedEntity.x, y: selectedEntity.y }, { x: cell.x, y: cell.y });
-
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
         } catch (error) {
