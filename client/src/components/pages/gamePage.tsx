@@ -1,4 +1,4 @@
-import react, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
 import { realTimeDb, auth } from '../../firebase/firebase';
@@ -23,7 +23,6 @@ import {
   Mommy,
   Ninja,
   Odin,
-  Team,
   Thor,
   Troll,
   Viking,
@@ -229,7 +228,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"dwarf"}/>
             }
             {currentTeamPiecesSetup.death === 0 ? null :
               <img className="image"
@@ -245,7 +244,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"death"}/>
             }
             {currentTeamPiecesSetup.devil === 0 ? null :
               <img className="image"
@@ -261,7 +260,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"devil"}/>
             }
             {currentTeamPiecesSetup.flag === 0 ? null :
               <img className="image"
@@ -277,7 +276,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"flag"}/>
             }
             <br />
             {currentTeamPiecesSetup.mommy === 0 ? null :
@@ -294,7 +293,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"mommy"}/>
             }
             {currentTeamPiecesSetup.ninja === 0 ? null :
               <img className="image"
@@ -310,7 +309,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"ninja"}/>
             }
             {currentTeamPiecesSetup.wizard === 0 ? null :
               <img className="image"
@@ -326,7 +325,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"wizard"}/>
             }
             {currentTeamPiecesSetup.troll === 0 ? null :
               <img className="image"
@@ -342,7 +341,7 @@ const GamePage = () => {
                      }
                      setHighlightBoard(highlightBoard);
                    }}
-              />
+               alt={"troll"}/>
             }
           </div>
         ) : null}
@@ -382,16 +381,16 @@ const GamePage = () => {
     if (entity == null) return null;
     if (entity.team !== getTeam(currentTeam).team && !entity.isVisible) {
       if (entity.team === team.blue){
-        return <img className="image" src={child_blue}></img>;
+        return <img className="image" src={child_blue} alt={"blue child"}></img>;
       }
-      else {return <img className="image" src={child_red}></img>;}
+      else {return <img className="image" src={child_red} alt={"red child"}></img>;}
     }
 
     return (
       <div className="image-container">
-        <img className="image" src={(entity as any).constructor?.getImage(entity)} />
+        <img className="image" src={(entity as any).constructor?.getImage(entity)}  alt={"entities"}/>
         {entity.isVisible && entity.team === currentTeam ? (
-          <img className="eye" src={eyeImage} />
+          <img className="eye" src={eyeImage}  alt={"eye"}/>
         ) : null}
       </div>
     );

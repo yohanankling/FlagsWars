@@ -68,6 +68,11 @@ export const HomePage = () => {
           onClick={() => {navigate('/scores');}}>
           Tables
         </button>
+          <button
+            className="tutorialBtn"
+            onClick={() => {navigate('/tutorial');}}>
+            Tutorial
+          </button>
           {email === "yohanankli@gmail.com" && (
             <button
               className="adminBtn"

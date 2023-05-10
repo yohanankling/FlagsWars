@@ -12,6 +12,7 @@ import { WelcomePage } from '../components/pages/welcomePage';
 import { ProfilePage } from '../components/pages/profilePage';
 import { ContactPage } from '../components/pages/contactPage';
 import { BetaPage } from '../components/pages/BetaPage';
+import { TutorialPage } from '../components/pages/tutorialPage';
 
 export const AppRouter = () => {
   const [currentUser, setCurrentUser] = useState(auth.currentUser);
@@ -38,6 +39,7 @@ export const AppRouter = () => {
             <Route path="/beta" element={<BetaPage />} />
             <Route path="/game/:id" element={<GamePage />} />
             <Route path="/offline" element={<OfflineGamePage />} />
+            <Route path="/tutorial" element={<TutorialPage />} />
           </>
         )}
       </Routes>
