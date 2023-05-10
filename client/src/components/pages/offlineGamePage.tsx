@@ -129,6 +129,7 @@ const OfflineGamePage = () => {
   const [currentTeam, setCurrentTeam] = useState(gameManager.redTeam);
   const [selectedEntity, setSelectedEntity] = useState<selectedEntity | null>(null);
   const [highlightBoard, setHighlightBoard] = useState<MarkerBoard>(new MarkerBoard());
+  const [gameMessage, setGameMessage] = useState("LET THE BATTLE BEGIN!!");
 
   const renderPieceImage = (entity: Entity) => {
     if (entity == null) return null;
@@ -163,6 +164,8 @@ const OfflineGamePage = () => {
     }
     // handle game clicks
     else if (gameManager.setupFinished) {
+      if (team.red){
+      setGameMessage("well..whats your next move??")}
       if (cell.entity?.team === currentTeam.team) {
         if (selectedEntity?.entity.type === 'wizard'){
           let wizard = selectedEntity.entity as Wizard;
@@ -179,7 +182,10 @@ const OfflineGamePage = () => {
               setHighlightBoard(new MarkerBoard());
             }
           }
-            else {alert("wizard can't train anymore")}
+            else if (team.red){
+                setGameMessage("wizard can't train anymore");
+            }
+          setSelectedEntity(null);
         }
         if (!selectedEntity || selectedEntity.entity.type !== 'wizard') {
         setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
@@ -198,15 +204,15 @@ const OfflineGamePage = () => {
               setGameManager(gmClone);
               setHighlightBoard(new MarkerBoard());
             }
-            else if (wizard.reveal===0){
-              alert("wizard cant reveal anymore")
+            else if (wizard.reveal===0 && team.red){
+              setGameMessage("wizard cant reveal anymore");
+              setSelectedEntity(null);
             }
           }
         try {
-          gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
-
+            const tempMessage: string = gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
+            setGameMessage(tempMessage);
           setSelectedEntity(null);
-
           const gmClone = GameManagerFactory.getClone(gameManager);
           setGameManager(gmClone);
           setHighlightBoard(new MarkerBoard());
@@ -220,7 +226,6 @@ const OfflineGamePage = () => {
               randomMoveDetails.entityPos.y,
               color.blue,
             );
-
             const gmClone = GameManagerFactory.getClone(gameManager);
             setGameManager(gmClone);
             setHighlightBoard(highlightBoardWithEnemyMove);
@@ -511,7 +516,7 @@ const OfflineGamePage = () => {
       </div>
         <div className='messagesBox'>
         <div>
-          {!gameManager.setupFinished ? <p className='message'>Place your pieces</p> : <p className='message'>Game started</p>}
+          {!gameManager.setupFinished ? <p className='message'>Place your pieces</p> : <p className='message'>{gameMessage}</p>}
       <div className='icons'>{renderGameSetup()}</div>
           </div>
     </div>

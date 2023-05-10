@@ -148,7 +148,7 @@ const GamePage = () => {
   const [gameManager, setGameManager] = useState(GameManagerFactory.initGameManager());
   const [currentTeam, setCurrentTeam] = useState<team | null>();
   const [initialLoad, setInitialLoad] = useState(false);
-
+  const [gameMessage, setGameMessage] = useState("LET THE BATTLE BEGIN!!");
   const [selectedEntity, setSelectedEntity] = useState<selectedEntity | null>(null);
   const [highlightBoard, setHighlightBoard] = useState<MarkerBoard>(new MarkerBoard());
   const [setupEntities, setSetupEntities] = useState<
@@ -416,6 +416,7 @@ const GamePage = () => {
     }
     // handle game clicks
     else if (gameManager.setupFinished) {
+      setGameMessage("well..whats your next move??");
       if (cell.entity?.team === currentTeam) {
         if (selectedEntity?.entity.type === 'wizard'){
           let wizard = selectedEntity.entity as Wizard;
@@ -436,7 +437,7 @@ const GamePage = () => {
             }
           }
           else {
-            alert("wizard can't train anymore")
+            setGameMessage("wizard can't train anymore");
             setSelectedEntity(null);
           }
         }
@@ -458,7 +459,7 @@ const GamePage = () => {
             setHighlightBoard(new MarkerBoard());
           }
           else if (wizard.reveal===0){
-            alert("wizard can't reveal anymore")
+            setGameMessage("wizard cant reveal anymore");
           }
         }
         try {
@@ -556,7 +557,7 @@ const GamePage = () => {
             </div>
             <div className='messagesBox'>
               <div>
-                {!gameManager.setupFinished ? <p className='message'>Place your pieces</p> : <p className='message'>Game started</p>}
+                {!gameManager.setupFinished ? <p className='message'>Place your pieces</p> : <p className='message'>{gameMessage}</p>}
                 <div className='icons'>
                   {renderGameSetup()}
                 </div>
