@@ -96,7 +96,7 @@ export class Entity {
   public level: number;
 
   constructor() {
-    this.isVisible = false;
+    this.isVisible = true;
   }
 
   public getPosition(board: Board): Position | null {
@@ -130,54 +130,34 @@ export class Entity {
     this.isVisible = true;
     const minePosition = this.getPosition(board);
     const enemyPosition = enemyEntity.getPosition(board);
-    if (this.type === "dwarf" && enemyEntity.type === "troll"){
-      enemyEntity.kill(board, enemyPosition);
-      this.set(board,enemyPosition);
-      this.kill(board, minePosition);
-      return "your dwarf just captured the troll!"
-    }
-    else if (this.type === "devil"){
-      this.kill(board, minePosition);
-      board.getCell(minePosition.x, minePosition.y).entity = EntityFactory.createEntity(enemyEntity.type, this.team);
-      return "your devil became" + this.type + "!"
-    }
-    else if (this.type === "death"){
-      this.kill(board, minePosition);
-      if (enemyEntity.type === "devil"){
-        board.getCell(enemyPosition.x, enemyPosition.y).entity = EntityFactory.createEntity(this.type, enemyEntity.team);
-        return "oh that's was a devil..."
-      }
-      else if (enemyEntity.type !== 'mommy'){
-        this.kill(board, enemyPosition);
-        return enemyEntity.type + " executed!"
-      }
-    }
-    else if (this.type === "troll"){
-      if (enemyEntity.type === "dwarf" || enemyEntity.type === "mommy"){
-      this.kill(board, minePosition);
-      return enemyEntity.type + " executed!";}
-    else {enemyEntity.kill(board, enemyPosition);}
-    }
-    else if (this.level >= enemyEntity.level){
+    if (this.level > enemyEntity.level){
       this.kill(board, enemyPosition);
       this.set(board,enemyPosition);
+      this.kill(board, minePosition);
+      message = enemyEntity.type + " executed!";
       if (this.type === "child" || this.type === 'knight' || this.type === "viking" || this.type === 'thor'){
         this.upgrade(board, this, enemyPosition);
+        message = message + "\n and your " + this.type + " get some upgrades ha?"
       }
-      this.kill(board, minePosition);
-      if (enemyEntity.type === 'flag'){
-        alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
-        // won the game func
-      }
-      return enemyEntity.type + " executed!";
     }
-    else if (this.level < enemyEntity.level){
+    else if (this.level <= enemyEntity.level){
       this.kill(board, minePosition);
       if (enemyEntity.type === "child" || enemyEntity.type === 'knight' || enemyEntity.type === "viking" || enemyEntity.type === 'thor') {
         this.upgrade(board, enemyEntity, enemyPosition);
       }
-      return "sorry...you just lose " + this.type;
+      message = "sorry to tell but...you just lose " + this.type;
       }
+    if (enemyEntity.type === 'flag'){
+      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
+      // won the game func
+    }
+    else if (enemyEntity.type === 'death'){
+      enemyEntity.kill(board, enemyPosition);
+      if (this.type!== 'devil'){
+        this.kill(board, minePosition);
+        message = "sorry to tell but...you just lose " + this.type + " to death..";
+      }
+    }
     return message;
   }
 
@@ -251,6 +231,22 @@ export class Death extends Entity {
     this.team = team;
     this.level = 6;
   }
+  public override effectOnEntity(enemyEntity: Entity, board: Board) {
+    this.isVisible = true;
+    enemyEntity.isVisible = true;
+    const minePosition = this.getPosition(board);
+    const enemyPosition = enemyEntity.getPosition(board);
+    this.kill(board, minePosition);
+      if (enemyEntity.type !== 'mommy' && enemyEntity.type !== 'flag'){
+        enemyEntity.kill(board, enemyPosition);
+        return  enemyEntity.type + " executed!"
+    }
+      if (enemyEntity.type === 'flag'){
+      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
+      // won the game func
+    }
+    return "you cant kill the deads!";
+  }
 }
 
 export class Devil extends Entity {
@@ -260,6 +256,13 @@ export class Devil extends Entity {
     this.team = team;
     this.level = 1;
   }
+  public override effectOnEntity(enemyEntity: Entity, board: Board) {
+    this.isVisible = true;
+    enemyEntity.isVisible = true;
+    const minePosition = this.getPosition(board);
+      board.getCell(minePosition.x, minePosition.y).entity = EntityFactory.createEntity(enemyEntity.type, this.team);
+      return "your devil became " + enemyEntity.type + "!";
+}
 }
 
 export class Dwarf extends Entity {
@@ -268,6 +271,33 @@ export class Dwarf extends Entity {
     this.type = 'dwarf';
     this.team = team;
     this.level = 0.5;
+  }
+  public override effectOnEntity(enemyEntity: Entity, board: Board) {
+    this.isVisible = true;
+    enemyEntity.isVisible = true;
+    const minePosition = this.getPosition(board);
+    const enemyPosition = enemyEntity.getPosition(board);
+    if (enemyEntity.type === "troll"){
+      enemyEntity.kill(board, enemyPosition);
+      this.set(board,enemyPosition);
+      this.kill(board, minePosition);
+      return "your dwarf just captured the troll!";
+    }
+    else if (enemyEntity.type === 'flag'){
+      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
+      // won the game func
+    }
+    else if (enemyEntity.type === 'devil'){
+      this.kill(board, minePosition);
+      board.getCell(minePosition.x, minePosition.y).entity = EntityFactory.createEntity(enemyEntity.type, this.team);
+      return "your became a devil!";
+    }
+    else if (enemyEntity.type === 'death'){
+      this.kill(board, minePosition);
+      enemyEntity.kill(board, enemyPosition);
+      return "he was a good dwarf, but death its a serious thing.";
+    }
+    else {this.kill(board, minePosition);}
   }
 }
 
@@ -280,9 +310,6 @@ export class Flag extends Entity {
   }
   public override getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
     return new MarkerBoard();
-  }
-  public override effectOnEntity(entity: Entity, board: Board) {
-    return "oh, you just lose the game...";
   }
 }
 
@@ -317,9 +344,9 @@ export class Ninja extends Entity {
 
   public override getPossibleMoves(x: number, y: number, board: Board): MarkerBoard {
     const markerBoard = new MarkerBoard();
-    for (let i = -2; i <= 2; i += 2) {
-      for (let j = -2; j <= 2; j += 2) {
-        if (i === 0 && j === 0) continue;
+    for (let i = -2; i <= 2; i++) {
+      for (let j = -2; j <= 2; j++) {
+        if (Math.abs(i) + Math.abs(j) > 2 || Math.abs(i) === Math.abs(j)) continue;
         if (this.isInsideBorders(x + i, y + j) &&
           (board.getCell(x + i, y + j).isEmpty() || board.getEntity(x + i, y + j)?.team !== this.team)) {
           markerBoard.setHighlight(x + i, y + j);
@@ -328,7 +355,7 @@ export class Ninja extends Entity {
     }
     return markerBoard;
   }
-}
+  }
 
 export class Odin extends Entity {
   constructor(team: team) {
@@ -354,6 +381,29 @@ export class Troll extends Entity {
     this.type = 'troll';
     this.team = team;
     this.level = 7;
+  }
+  public override effectOnEntity(enemyEntity: Entity, board: Board) {
+    this.isVisible = true;
+    enemyEntity.isVisible = true;
+    const minePosition = this.getPosition(board);
+    const enemyPosition = enemyEntity.getPosition(board);
+
+    if (enemyEntity.type === "dwarf" || enemyEntity.type === "mommy"){
+      this.kill(board, minePosition);
+      return this.type + " executed!";}
+    else if (enemyEntity.type === 'devil'){
+      board.getCell(enemyPosition.x, enemyPosition.y).entity = EntityFactory.createEntity(this.type, enemyEntity.team);
+      return "clone of a troll... that's not good.."
+    }
+    else {
+      enemyEntity.kill(board, enemyPosition);
+      this.set(board,enemyPosition);
+      this.kill(board, minePosition);
+    }
+    if (enemyEntity.type === 'flag'){
+      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
+      // won the game func
+    }
   }
 }
 
@@ -576,10 +626,9 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    // instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 2, child: 0 };
     instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
     instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 2, child: 0 };
+    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;

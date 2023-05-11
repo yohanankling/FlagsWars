@@ -197,7 +197,7 @@ const OfflineGamePage = () => {
         else if (selectedEntity) {
           if(selectedEntity.entity.type === "wizard"){
             let wizard = selectedEntity.entity as Wizard;
-            if(!cell?.entity.isVisible && wizard.reveal>0){
+            if(cell?.entity && !cell?.entity.isVisible && wizard.reveal>0){
               cell.entity.isVisible = true;
               wizard.reveal--;
               const gmClone = GameManagerFactory.getClone(gameManager);
@@ -399,7 +399,6 @@ const OfflineGamePage = () => {
   const handleReadyClick = () => {
     gameManager.setReady(currentTeam);
     const oppositeTeam = gameManager.getOppositeTeam(currentTeam);
-
     const numbers = new Set();
     while (numbers.size < 8) {
       const number = Math.floor(Math.random() * 8);
