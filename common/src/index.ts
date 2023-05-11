@@ -96,7 +96,7 @@ export class Entity {
   public level: number;
 
   constructor() {
-    this.isVisible = false;
+    this.isVisible = true;
   }
 
   public getPosition(board: Board): Position | null {
@@ -165,15 +165,16 @@ export class Entity {
         this.upgrade(board, this, enemyPosition);
       }
       this.kill(board, minePosition);
+      if (enemyEntity.type === 'flag'){
+        alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
+        // won the game func
+      }
       return enemyEntity.type + " executed!";
     }
     else if (this.level < enemyEntity.level){
       this.kill(board, minePosition);
       if (enemyEntity.type === "child" || enemyEntity.type === 'knight' || enemyEntity.type === "viking" || enemyEntity.type === 'thor') {
         this.upgrade(board, enemyEntity, enemyPosition);
-      }
-      if (enemyEntity.type === 'flag'){
-        // won the game func
       }
       return "sorry...you just lose " + this.type;
       }
@@ -575,10 +576,10 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 2, child: 0 };
-    // instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    // instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 2, child: 0 };
+    // instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 2, child: 0 };
+    instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 2, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;

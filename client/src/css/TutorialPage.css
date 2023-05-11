@@ -24,16 +24,34 @@
     top: 40%;
     left: -30%;
     transform: translate(-50%, -50%);
-    width: 35vh;
-    height: 25vh;
+    width: 40vh;
+    height: 30vh;
     border-radius: 1em;
     background-color: white;
     box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .text{
-    white-space: nowrap;
-    margin-right: auto;
-    margin-left: 10px;
+    text-align: center;
     color: #4CAF50;
+}
+
+
+.details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 40%;
+    left: 140%;
+    transform: translate(-50%, -50%);
+    width: 50vh;
+    height: 30vh;
+    border-radius: 1em;
+    background-color: white;
+    box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
 }
