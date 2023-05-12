@@ -153,23 +153,23 @@ const OfflineGamePage = () => {
   const handleCellClick = (cell: Cell) => {
     // handle setup clicks
     if (!gameManager.setupFinished && selectedEntity && !cell.entity) {
-        try {
-          gameManager.setup_setPiece(selectedEntity.entity, { x: cell.x, y: cell.y });
-          cell.entity = selectedEntity.entity;
-          setSelectedEntity(null);
-          setHighlightBoard(new MarkerBoard());
-        } catch (error) {
-          console.error(error);
-        }
+      try {
+        gameManager.setup_setPiece(selectedEntity.entity, { x: cell.x, y: cell.y });
+        cell.entity = selectedEntity.entity;
+        setSelectedEntity(null);
+        setHighlightBoard(new MarkerBoard());
+      } catch (error) {
+        console.error(error);
+      }
     }
     // handle game clicks
     else if (gameManager.setupFinished) {
       if (team.red){
-      setGameMessage("well..whats your next move??")}
+        setGameMessage("well..whats your next move??")}
       if (cell.entity?.team === currentTeam.team) {
         if (selectedEntity?.entity.type === 'wizard'){
           let wizard = selectedEntity.entity as Wizard;
-            if (wizard.train > 0){
+          if (wizard.train > 0){
             if (cell.entity.type === "child" || cell.entity.type === "knight" || cell.entity.type === "viking" || cell.entity.type === "thor"){
               let p = new Position();
               p.x = cell.x;
@@ -182,36 +182,36 @@ const OfflineGamePage = () => {
               setHighlightBoard(new MarkerBoard());
             }
           }
-            else if (team.red){
-                setGameMessage("wizard can't train anymore");
-            }
+          else if (team.red){
+            setGameMessage("wizard can't train anymore");
+          }
           setSelectedEntity(null);
         }
         if (!selectedEntity || selectedEntity.entity.type !== 'wizard') {
-        setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
-        const highlightBoard = cell.entity.getPossibleMoves?.(cell.x, cell.y, gameManager.board) as MarkerBoard;
-        highlightBoard.setHighlight(cell.x, cell.y);
-        setHighlightBoard(highlightBoard);
+          setSelectedEntity({ entity: cell.entity, x: cell.x, y: cell.y });
+          const highlightBoard = cell.entity.getPossibleMoves?.(cell.x, cell.y, gameManager.board) as MarkerBoard;
+          highlightBoard.setHighlight(cell.x, cell.y);
+          setHighlightBoard(highlightBoard);
+        }
       }
-      }
-        else if (selectedEntity) {
-          if(selectedEntity.entity.type === "wizard"){
-            let wizard = selectedEntity.entity as Wizard;
-            if(cell?.entity && !cell?.entity.isVisible && wizard.reveal>0){
-              cell.entity.isVisible = true;
-              wizard.reveal--;
-              const gmClone = GameManagerFactory.getClone(gameManager);
-              setGameManager(gmClone);
-              setHighlightBoard(new MarkerBoard());
-            }
-            else if (wizard.reveal===0 && team.red){
-              setGameMessage("wizard cant reveal anymore");
-              setSelectedEntity(null);
-            }
+      else if (selectedEntity) {
+        if(selectedEntity.entity.type === "wizard"){
+          let wizard = selectedEntity.entity as Wizard;
+          if(cell?.entity && !cell?.entity.isVisible && wizard.reveal>0){
+            cell.entity.isVisible = true;
+            wizard.reveal--;
+            const gmClone = GameManagerFactory.getClone(gameManager);
+            setGameManager(gmClone);
+            setHighlightBoard(new MarkerBoard());
           }
+          else if (wizard.reveal===0 && team.red){
+            setGameMessage("wizard cant reveal anymore");
+            setSelectedEntity(null);
+          }
+        }
         try {
-            const tempMessage: string = gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
-            setGameMessage(tempMessage);
+          const tempMessage: string = gameManager.move({ x: cell.x, y: cell.y }, { x: selectedEntity.x, y: selectedEntity.y });
+          setGameMessage(tempMessage);
           setSelectedEntity(null);
           const gmClone = GameManagerFactory.getClone(gameManager);
           setGameManager(gmClone);
@@ -219,6 +219,10 @@ const OfflineGamePage = () => {
 
           setTimeout(() => {
             const randomMoveDetails = execRandomMove(gameManager.teamTurn);
+           // tie
+            if (randomMoveDetails.entityPos.x === -1){
+              return
+            }
             const highlightBoardWithEnemyMove = new MarkerBoard();
             highlightBoardWithEnemyMove.setHighlight(randomMoveDetails.move.x, randomMoveDetails.move.y, color.red);
             highlightBoardWithEnemyMove.setHighlight(
@@ -264,126 +268,126 @@ const OfflineGamePage = () => {
     return (
       <div>
         <div className="icons">
-         <br/>
+          <br/>
           {currentTeamPiecesSetup.dwarf === 0 ? null :
             <img className="image"
-              src={dwarfImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Dwarf(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={dwarfImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Dwarf(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           {currentTeamPiecesSetup.death === 0 ? null :
             <img className="image"
-              src={deathImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Death(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={deathImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Death(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           {currentTeamPiecesSetup.devil === 0 ? null :
             <img className="image"
-              src={devilImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Devil(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={devilImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Devil(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           {currentTeamPiecesSetup.flag === 0 ? null :
             <img className="image"
-              src={flagImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Flag(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={flagImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Flag(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           <br/>
           {currentTeamPiecesSetup.mommy === 0 ? null :
             <img className="image"
-              src={mommyImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Mommy(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={mommyImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Mommy(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           {currentTeamPiecesSetup.ninja === 0 ? null :
             <img className="image"
-              src={ninjaImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Ninja(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={ninjaImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Ninja(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           {currentTeamPiecesSetup.wizard === 0 ? null :
             <img className="image"
-              src={wizardImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Wizard(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={wizardImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Wizard(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
           {currentTeamPiecesSetup.troll === 0 ? null :
             <img className="image"
-              src={trollImage}
-              onClick={() => {
-                setSelectedEntity({ entity: new Troll(currentTeam.team), x: -1, y: -1 });
-                const highlightBoard = new MarkerBoard();
-                for (let i = 0; i < 8; i++) {
-                  if (!gameManager.board.getCell(i, 7).entity) {
-                    highlightBoard.setHighlight(i, 7);
-                  }
-                }
-                setHighlightBoard(highlightBoard);
-              }}
+                 src={trollImage}
+                 onClick={() => {
+                   setSelectedEntity({ entity: new Troll(currentTeam.team), x: -1, y: -1 });
+                   const highlightBoard = new MarkerBoard();
+                   for (let i = 0; i < 8; i++) {
+                     if (!gameManager.board.getCell(i, 7).entity) {
+                       highlightBoard.setHighlight(i, 7);
+                     }
+                   }
+                   setHighlightBoard(highlightBoard);
+                 }}
             />
           }
         </div>
@@ -433,6 +437,12 @@ const OfflineGamePage = () => {
           currentTeamOnBoardEntities.push({ entity: currEntity, pos: { x: j, y: i } });
         }
       }
+    }
+// tie
+    const allFlagOrMommy = currentTeamOnBoardEntities.every(entity => entity.entity.type === "flag" || entity.entity.type === "mommy");
+    if (allFlagOrMommy) {
+      gameManager.move({ x:-1,y:-1 }, { x:-1,y:-1 });
+      return { move: { x:-1,y:-1 }, entityPos: { x:-1,y:-1 } };
     }
     const randomEntity = currentTeamOnBoardEntities[Math.floor(Math.random() * currentTeamOnBoardEntities.length)];
     const possibleMovesBoard = randomEntity.entity.getPossibleMoves?.(
@@ -492,34 +502,34 @@ const OfflineGamePage = () => {
             </button>
           </div>
         </div>
-      <div className="board">
-        {gameManager.board.board?.map((row: Cell[], y: number) => (
-          <div key={y} className="row">
-            {row.map((cell, x) => {
-              return (
-                <button
-                  key={x}
-                  className={classNames('cell', {
-                    [`${color[highlightBoard.returnHighlightType(x, y)]}-highlight`]: true,
-                    'light': (y + x) % 2 === 0,
-                    'dark': (y + x) % 2 === 1,
-                  })}
-                  onClick={() => handleCellClick(cell)}
-                >
-                  {renderPieceImage(cell?.entity as Entity)}
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+        <div className="board">
+          {gameManager.board.board?.map((row: Cell[], y: number) => (
+            <div key={y} className="row">
+              {row.map((cell, x) => {
+                return (
+                  <button
+                    key={x}
+                    className={classNames('cell', {
+                      [`${color[highlightBoard.returnHighlightType(x, y)]}-highlight`]: true,
+                      'light': (y + x) % 2 === 0,
+                      'dark': (y + x) % 2 === 1,
+                    })}
+                    onClick={() => handleCellClick(cell)}
+                  >
+                    {renderPieceImage(cell?.entity as Entity)}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
         <div className='messagesBox'>
-        <div>
-          {!gameManager.setupFinished ? <p className='message'>Place your pieces</p> : <p className='message'>{gameMessage}</p>}
-      <div className='icons'>{renderGameSetup()}</div>
+          <div>
+            {!gameManager.setupFinished ? <p className='message'>Place your pieces</p> : <p className='message'>{gameMessage}</p>}
+            <div className='icons'>{renderGameSetup()}</div>
           </div>
-    </div>
-    </div>
+        </div>
+      </div>
     </div>
   );
 };

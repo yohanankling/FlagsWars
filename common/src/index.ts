@@ -146,10 +146,9 @@ export class Entity {
         this.upgrade(board, enemyEntity, enemyPosition);
       }
       message = "sorry to tell but...you just lose " + this.type;
-      }
+    }
     if (enemyEntity.type === 'flag'){
-      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
-      // won the game func
+      this.won(this.team, enemyEntity.team);
     }
     else if (enemyEntity.type === 'death'){
       enemyEntity.kill(board, enemyPosition);
@@ -176,7 +175,7 @@ export class Entity {
         board.getCell(position.x, position.y).entity.isVisible = true;
       }
       else {
-      board.getCell(position.x, position.y).entity = new Knight(entity.team);}
+        board.getCell(position.x, position.y).entity = new Knight(entity.team);}
       return (new Knight(entity.team))
     }
     else if(entity.type === "knight"){
@@ -213,6 +212,10 @@ export class Entity {
   }
 
   public static getImage?(entity: Entity);
+
+  public won(winner: team, loser:team){
+    alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
+  }
 }
 
 export class Child extends Entity {
@@ -237,13 +240,12 @@ export class Death extends Entity {
     const minePosition = this.getPosition(board);
     const enemyPosition = enemyEntity.getPosition(board);
     this.kill(board, minePosition);
-      if (enemyEntity.type !== 'mommy' && enemyEntity.type !== 'flag'){
-        enemyEntity.kill(board, enemyPosition);
-        return  enemyEntity.type + " executed!"
+    if (enemyEntity.type !== 'mommy' && enemyEntity.type !== 'flag'){
+      enemyEntity.kill(board, enemyPosition);
+      return  enemyEntity.type + " executed!"
     }
-      if (enemyEntity.type === 'flag'){
-      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
-      // won the game func
+    if (enemyEntity.type === 'flag'){
+      this.won(this.team, enemyEntity.team);
     }
     return "you cant kill the deads!";
   }
@@ -260,9 +262,9 @@ export class Devil extends Entity {
     this.isVisible = true;
     enemyEntity.isVisible = true;
     const minePosition = this.getPosition(board);
-      board.getCell(minePosition.x, minePosition.y).entity = EntityFactory.createEntity(enemyEntity.type, this.team);
-      return "your devil became " + enemyEntity.type + "!";
-}
+    board.getCell(minePosition.x, minePosition.y).entity = EntityFactory.createEntity(enemyEntity.type, this.team);
+    return "your devil became " + enemyEntity.type + "!";
+  }
 }
 
 export class Dwarf extends Entity {
@@ -284,8 +286,7 @@ export class Dwarf extends Entity {
       return "your dwarf just captured the troll!";
     }
     else if (enemyEntity.type === 'flag'){
-      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
-      // won the game func
+      this.won(this.team, enemyEntity.team);
     }
     else if (enemyEntity.type === 'devil'){
       this.kill(board, minePosition);
@@ -355,7 +356,7 @@ export class Ninja extends Entity {
     }
     return markerBoard;
   }
-  }
+}
 
 export class Odin extends Entity {
   constructor(team: team) {
@@ -401,8 +402,7 @@ export class Troll extends Entity {
       this.kill(board, minePosition);
     }
     if (enemyEntity.type === 'flag'){
-      alert("YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame")
-      // won the game func
+      this.won(this.team, enemyEntity.team);
     }
   }
 }
@@ -431,7 +431,7 @@ export class Wizard extends Entity {
 }
 
 class EntityFactory {
-static createEntity(type: string, team: team): Entity {
+  static createEntity(type: string, team: team): Entity {
     switch (type) {
       case 'child':
         return new Child(team);
@@ -532,6 +532,11 @@ export class GameManager {
   }
 
   public move(newPos: Position, currPos: Position) {
+    // tie
+    if(newPos.x === -1){
+      alert("so.. this is a tie!");
+      return "message";
+    }
     let message = "well..whats your next move??"
     const entity: Entity = this.board.getEntity(currPos.x, currPos.y);
 
@@ -627,8 +632,8 @@ export class GameManagerFactory {
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
     instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
+    // instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;
