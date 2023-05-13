@@ -94,21 +94,21 @@ export const gameController = () => {
           // filter
           break;
         case 'exec_move':
+          let message = "error";
           // handle current team turn
           if (!req.body.payload.move) {
             throw new Error('Payload is missing to exec the moves');
           }
 
           try {
-            gm.move(req.body.payload.move.to, req.body.payload.move.from);
+            message = gm.move(req.body.payload.move.to, req.body.payload.move.from);
           } catch (error) {
             return res.send(error);
           }
 
           const game_data = GameManagerFactory.getData(gm);
           updateGameData(gameId, game_data);
-          break;
-
+          return res.send(message);
         case 'update':
           try {
             const a = req.body.payload.setupEntity?.entity;

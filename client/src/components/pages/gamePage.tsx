@@ -462,7 +462,8 @@ const GamePage = () => {
           }
         }
         try {
-          await move(id, { x: selectedEntity.x, y: selectedEntity.y }, { x: cell.x, y: cell.y });
+          let message = await move(id, { x: selectedEntity.x, y: selectedEntity.y }, { x: cell.x, y: cell.y });
+          setGameMessage(message);
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
         } catch (error) {

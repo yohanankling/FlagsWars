@@ -18,11 +18,12 @@ export const setReady = async (gameId: string, setupEntities: { entity: Entity; 
 };
 
 export const move = async (gameId: string, from: IPos, to: IPos) => {
-  await send({
+  const res = await send({
     method: 'POST',
     route: '/game/move',
     data: { type: 'exec_move', gameId, payload: { move: { from, to } } },
   });
+  return res.data;
 };
 
 

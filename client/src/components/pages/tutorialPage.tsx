@@ -111,7 +111,7 @@ export const TutorialPage = () => {
           <div className='message-box'>
             <div className='text'> {currentImage.description}</div>
           </div>
-          <div className='details'>
+          <div className='assets-details'>
             <div className="icons">
               <br />
                 <img className="image"
