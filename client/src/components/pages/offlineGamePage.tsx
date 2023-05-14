@@ -125,6 +125,8 @@ interface selectedEntity {
 
 const OfflineGamePage = () => {
   const navigate = useNavigate();
+  const [gameEnd, setGameEnd] = useState(false);
+  const [endGameMessage, setEndGameMessage] = useState("");
   const [gameManager, setGameManager] = useState(GameManagerFactory.initGameManager());
   const [currentTeam, setCurrentTeam] = useState(gameManager.redTeam);
   const [selectedEntity, setSelectedEntity] = useState<selectedEntity | null>(null);
@@ -216,12 +218,17 @@ const OfflineGamePage = () => {
           const gmClone = GameManagerFactory.getClone(gameManager);
           setGameManager(gmClone);
           setHighlightBoard(new MarkerBoard());
-
+          if (tempMessage === "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame") {
+            setEndGameMessage("Congratulations!\n You won the game!");
+            setGameEnd(true);
+          }
           setTimeout(() => {
             const randomMoveDetails = execRandomMove(gameManager.teamTurn);
            // tie
             if (randomMoveDetails.entityPos.x === -1){
-              return
+              setEndGameMessage("Well...\n that's a tie!");
+              setGameEnd(true);
+              return;
             }
             const highlightBoardWithEnemyMove = new MarkerBoard();
             highlightBoardWithEnemyMove.setHighlight(randomMoveDetails.move.x, randomMoveDetails.move.y, color.red);
@@ -522,6 +529,23 @@ const OfflineGamePage = () => {
               })}
             </div>
           ))}
+          {gameEnd ? (
+            <div className="overlay">
+              <div className='endgame'>
+                <h4>{endGameMessage}</h4>
+                <p className="messageGame">Would you like to:</p>
+                <button
+                  className='endgameBtn'
+                  onClick={() => window.location.reload()}>
+                  Play again
+                </button>
+                <button
+                  className='endgameBtn'
+                  onClick={() => navigate('/')}>
+                  Back home</button>
+              </div>
+            </div>
+          ) : null}
         </div>
         <div className='messagesBox'>
           <div>

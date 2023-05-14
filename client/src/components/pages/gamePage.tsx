@@ -144,6 +144,8 @@ const GamePage = () => {
     player1: { id: '', team: team.blue },
     player2: { id: '', team: team.red },
   });
+  const [gameEnd, setGameEnd] = useState(false);
+  const [endGameMessage, setEndGameMessage] = useState("");
   const [gameManager, setGameManager] = useState(GameManagerFactory.initGameManager());
   const [currentTeam, setCurrentTeam] = useState<team | null>();
   const [initialLoad, setInitialLoad] = useState(false);
@@ -466,6 +468,10 @@ const GamePage = () => {
           setGameMessage(message);
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
+          if (message === "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame") {
+            setEndGameMessage("Congratulations!\n You won the game!");
+            setGameEnd(true);
+          }
         } catch (error) {
           console.error(error);
         }
@@ -554,6 +560,18 @@ const GamePage = () => {
                   })}
                 </div>
               ))}
+              {gameEnd ? (
+                <div className="overlay">
+                  <div className='endgame'>
+                    <h4>{endGameMessage}</h4>
+                    <p className="messageGame">Would you like to:</p>
+                    <button
+                      className='endgameBtn'
+                      onClick={() => navigate('/')}>
+                      Back home</button>
+                  </div>
+                </div>
+              ) : null}
             </div>
             <div className='messagesBox'>
               <div>
