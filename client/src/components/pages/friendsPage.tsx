@@ -79,7 +79,7 @@ export const FriendsPage = () => {
                   <p>Your friend did not answer your invite yer</p>
                 ) : (
                   <>
-                    <p>You friend is waiting for you to accept their invite</p>
+                    <p>Your friend is waiting for you to accept their invite</p>
                     <div className="game-buttons">
                     <button className='clear'
                       onClick={() => {
@@ -214,23 +214,27 @@ export const FriendsPage = () => {
           <h4 className='title'> Friends List </h4>
           <div className='friends-list'>
           {friendListLoaded ? (
-        <ul>
-          {users.map((user, i) => {
-            return (
-              <li key={i}>
-                {user.email}{' '}
-                <button
-                  className='invite-button'
-                  onClick={() => {
-                    inviteToGameHandler(user.uid);
-                  }}
-                >
-                  Invite to game
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+              users.length === 0 ? (
+                  <p>No friend added yet</p>
+                ) : (
+                  <ul>
+                    {users.map((user, i) => {
+                      return (
+                        <li key={i}>
+                          {user.email}{' '}
+                          <button
+                            className='invite-button'
+                            onClick={() => {
+                              inviteToGameHandler(user.uid);
+                            }}
+                          >
+                            Invite to game
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )
       ) : (
         <p>Loading..</p>
       )}

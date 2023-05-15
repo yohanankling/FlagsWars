@@ -4,7 +4,6 @@ import { ref, onValue } from 'firebase/database';
 import { realTimeDb, auth } from '../../firebase/firebase';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
-// import { DbService } from '../../services/dbService';
 import '../../css/game.css';
 import {
   Cell,
@@ -596,7 +595,8 @@ const GamePage = () => {
         <h2>Loading Game...</h2>
       )}
     </>
-    </div>
+        <h6 className='tip'> Tip: you can save the game url for later to continue the battle</h6>
+      </div>
     </div>
   );
 };

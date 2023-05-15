@@ -649,7 +649,7 @@ export class GameManagerFactory {
     instance.endgame = "none";
 
     for (let i = 0; i < 8; i++) {
-      instance.board.getCell(i, 3).entity = new Flag(team.red);
+      instance.board.getCell(i, 2).entity = new Flag(team.red);
     }
 
     for (let i = 0; i < 8; i++) {
