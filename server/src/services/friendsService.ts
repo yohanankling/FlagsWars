@@ -43,3 +43,15 @@ export const getDoc = async (uid: string) => {
   return doc.data();
   return uid;
 };
+
+export const win = async (uid: string) => {
+  const dbService = new DbService();
+  const currentUserRef = dbService.getUserDoc(uid);
+  currentUserRef.update({ win: FieldValue.increment(1) });
+};
+
+export const lose = async (uid: string) => {
+  const dbService = new DbService();
+  const currentUserRef = dbService.getUserDoc(uid);
+  currentUserRef.update({ lose: FieldValue.increment(1) });
+};

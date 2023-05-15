@@ -21,7 +21,6 @@ export const send = async <T>(config: {
   const { data, method, route, headers, timeout } = config;
   const requestConfig = { method: method, baseURL: BASE_URL, url: route, data: data, headers, timeout };
 
-  // if we want to have the option to override the Authorization object this should be refactored
   if (auth.currentUser) {
     const token = await auth.currentUser?.getIdToken();
     requestConfig.headers.Authorization = `Bearer ${token}`;

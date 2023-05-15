@@ -7,6 +7,8 @@ interface User {
   name?: string;
   email?: string;
   friends?: string[];
+  win?: number;
+  lose?: number;
 }
 
 interface UserWithId extends User {
@@ -61,8 +63,7 @@ export class DbService {
 
     if (!user?.exists) {
       const authUser = await this.getAuthUser(uid);
-      const newFirestoreUser: User = { email: authUser?.email, friends: [], name: authUser?.displayName };
-
+      const newFirestoreUser: User = { email: authUser?.email, friends: [], name: authUser?.displayName, win:0, lose:0 };
       await this.setUser(uid, newFirestoreUser);
     }
   }

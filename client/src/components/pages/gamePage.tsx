@@ -4,6 +4,7 @@ import { ref, onValue } from 'firebase/database';
 import { realTimeDb, auth } from '../../firebase/firebase';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
+// import { DbService } from '../../services/dbService';
 import '../../css/game.css';
 import {
   Cell,
@@ -32,6 +33,7 @@ import { move, setReady, updateBoard } from '../../services/onlineGameSerivce';
 import React from 'react';
 import authService from '../../services/authService';
 import { send } from '../../services/httpContext';
+import firebase from 'firebase/compat';
 const contactImg = require('../../icons/contact.png');
 const logoutImg = require('../../icons/logout.png');
 const profileImg = require('../../icons/profile.png');
@@ -474,6 +476,7 @@ const GamePage = () => {
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
           if (message === "blue won the game!") {
+            endgame(gameDetails.player1.id,gameDetails.player2.id)
             setEndGameMessage("Blue team won the game!");
           } else if (message === "red won the game!") {
             setEndGameMessage("Red team won the game!");
@@ -597,5 +600,10 @@ const GamePage = () => {
     </div>
   );
 };
+
+const endgame = async (winner:string, loser:string) => {
+  const wonRes = await send({ method: 'POST', route: '/win', data: { uid: winner } });
+  const loseRes = await send({ method: 'POST', route: '/lose', data: { uid: loser } });
+  };
 
 export default GamePage;

@@ -2,7 +2,7 @@ import { app } from '..';
 import { authMiddleware } from '../middlewares/auth';
 import { DbService } from '../services/dbService';
 import { acceptGameInvite, inviteToGame, rejectGameInvite } from '../services/gameInviteService';
-import { addFriend, getDoc, getFriends, getUid } from '../services/friendsService';
+import { addFriend, getDoc, getFriends, getUid, lose, win } from '../services/friendsService';
 
 export const friendsController = () => {
   app.post('/getuid', authMiddleware, async (req: any, res) => {
@@ -16,6 +16,18 @@ export const friendsController = () => {
       const doc = await getDoc(uid);
       res.send(doc);
     });
+
+  app.post('/win', authMiddleware, async (req: any, res) => {
+    const uid = req.body?.uid;
+    const doc = await win(uid);
+    res.send(doc);
+  });
+
+  app.post('/lose', authMiddleware, async (req: any, res) => {
+    const uid = req.body?.uid;
+    const doc = await lose(uid);
+    res.send(doc);
+  });
 
   app.get('/friends', authMiddleware, async (req: any, res) => {
     const uid = req.user.uid;

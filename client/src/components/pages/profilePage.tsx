@@ -28,8 +28,8 @@ export const ProfilePage = () => {
       const res = await send({ method: 'POST', route: '/getDoc', data: { uid: uid } });
       doc = res.data;
       setFriends(doc.friends.length);
-      // setFriends(doc.friends.won);
-      // setFriends(doc.friends.lose);
+      setWon(doc.win);
+      setLose(doc.lose);
     } catch (error: any) {
       console.error(error);}
   };
