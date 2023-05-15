@@ -148,7 +148,7 @@ export class Entity {
       message = "sorry to tell but...you just lose " + this.type;
     }
     if (enemyEntity.type === 'flag'){
-      return "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame";
+      return this.team.toString();
     }
     else if (enemyEntity.type === 'death'){
       enemyEntity.kill(board, enemyPosition);
@@ -242,7 +242,7 @@ export class Death extends Entity {
       return  enemyEntity.type + " executed!"
     }
     if (enemyEntity.type === 'flag'){
-      return "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame";
+      return this.team.toString();
     }
     return "you cant kill the deads!";
   }
@@ -283,7 +283,7 @@ export class Dwarf extends Entity {
       return "your dwarf just captured the troll!";
     }
     else if (enemyEntity.type === 'flag'){
-      return "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame";
+      return this.team.toString();
     }
     else if (enemyEntity.type === 'devil'){
       this.kill(board, minePosition);
@@ -399,7 +399,7 @@ export class Troll extends Entity {
       this.kill(board, minePosition);
     }
     if (enemyEntity.type === 'flag'){
-      return "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame";
+      return this.team.toString();
     }
   }
 }
@@ -491,6 +491,7 @@ export class GameManager {
   public redTeam: Team;
   public teamTurn: Team;
   public turnCount: number;
+  public endgame: string;
 
   public setup_setPiece(entity: Entity, pos: Position) {
     if (this.setupFinished) throw new Error('Setup is finished');
@@ -531,7 +532,7 @@ export class GameManager {
   public move(newPos: Position, currPos: Position) {
     // tie
     if(newPos.x === -1){
-      alert("so.. this is a tie!");
+      this.endGame("tie")
       return "message";
     }
     let message = "well..whats your next move??"
@@ -562,6 +563,10 @@ export class GameManager {
       this.board.getCell(currPos.x, currPos.y).entity = null;
     }
     this.passTurn();
+    if(message === "1"){this.endGame("red")
+    message = "red won the game!"}
+    else if(message === "0"){this.endGame("blue")
+      message = "blue won the game!"}
     return message;
   }
 
@@ -593,6 +598,10 @@ export class GameManager {
     this.turnCount++;
   }
 
+  public endGame(message: string) {
+    this.endgame = message;
+  }
+
   constructor(init: boolean = false) {
     if (init) {
       this.board = new Board();
@@ -607,6 +616,7 @@ export interface IGameManagerData {
   board: Cell[][];
   turnCount: number;
   setupFinished: boolean;
+  endgame: string;
 }
 
 export class GameManagerFactory {
@@ -619,6 +629,7 @@ export class GameManagerFactory {
     clone.setupFinished = gameManager.setupFinished;
     clone.turnCount = gameManager.turnCount;
     clone.teamTurn = gameManager.teamTurn;
+    clone.endgame = gameManager.endgame;
     return clone;
   }
 
@@ -628,15 +639,17 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    // instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
     // instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 0, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:1, viking:0, wizard: 0, child: 0 };
+    instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 1, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:1, viking:0, wizard: 0, child: 0 };
+    instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 1, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:1, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;
+    instance.endgame = "none";
 
     for (let i = 0; i < 8; i++) {
-      instance.board.getCell(i, 6).entity = new Child(team.red);
+      instance.board.getCell(i, 2).entity = new Flag(team.red);
     }
 
     for (let i = 0; i < 8; i++) {
@@ -718,7 +731,7 @@ export class GameManagerFactory {
   }
 
   public static restoreGame(data: IGameManagerData): GameManager {
-    const { board, setupFinished, teamTurn, turnCount, redTeam, blueTeam } = data;
+    const { board, setupFinished, teamTurn, turnCount, redTeam, blueTeam, endgame } = data;
     const instance = new GameManager(true);
 
     instance.blueTeam = this.restoreTeam(blueTeam);
@@ -727,12 +740,13 @@ export class GameManagerFactory {
     instance.setupFinished = setupFinished;
     instance.teamTurn = redTeam.team === teamTurn ? instance.redTeam : instance.blueTeam;
     instance.turnCount = turnCount;
+    instance.endgame = endgame;
 
     return instance;
   }
 
   public static getData(gameManager: GameManager): IGameManagerData {
-    const { blueTeam, board, setupFinished, teamTurn, turnCount, redTeam } = gameManager;
+    const { blueTeam, board, setupFinished, teamTurn, turnCount, redTeam,endgame } = gameManager;
 
     const data = {
       redTeam: redTeam,
@@ -740,6 +754,7 @@ export class GameManagerFactory {
       teamTurn: teamTurn.team,
       board: board.board,
       turnCount: turnCount,
+      endgame: endgame,
       setupFinished: setupFinished,
     };
 

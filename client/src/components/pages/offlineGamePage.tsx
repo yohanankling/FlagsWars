@@ -218,7 +218,7 @@ const OfflineGamePage = () => {
           const gmClone = GameManagerFactory.getClone(gameManager);
           setGameManager(gmClone);
           setHighlightBoard(new MarkerBoard());
-          if (tempMessage === "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame") {
+          if (tempMessage === "red won the game!") {
             setEndGameMessage("Congratulations!\n You won the game!");
             setGameEnd(true);
           }
@@ -228,6 +228,7 @@ const OfflineGamePage = () => {
             if (randomMoveDetails.entityPos.x === -1){
               setEndGameMessage("Well...\n that's a tie!");
               setGameEnd(true);
+              gameManager.endGame("tie");
               return;
             }
             const highlightBoardWithEnemyMove = new MarkerBoard();
@@ -470,8 +471,11 @@ const OfflineGamePage = () => {
 
     const randomMove = possibleMovesArr[Math.floor(Math.random() * possibleMovesArr.length)];
 
-    gameManager.move(randomMove, randomEntity.pos);
-
+    const message = gameManager.move(randomMove, randomEntity.pos);
+      if (message === "blue won the game!") {
+      setEndGameMessage("NOOOO!\n You lose the game!");
+      setGameEnd(true);
+    }
     return { move: randomMove, entityPos: randomEntity.pos };
   };
 

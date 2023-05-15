@@ -158,6 +158,11 @@ const GamePage = () => {
       pos: Position;
     }[]
   >([]);
+  useEffect(() => {
+    if (gameManager.endgame === "blue" || gameManager.endgame === "red" || gameManager.endgame === "tie") {
+      setGameEnd(true);
+    }
+  }, [gameManager.endgame]);
 
   const fetchDoc = async () => {
     let fetchUid = user.uid;
@@ -468,9 +473,10 @@ const GamePage = () => {
           setGameMessage(message);
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
-          if (message === "YOU WON THE GAME!!!\n get ready for an eternity glory in hall of fame") {
-            setEndGameMessage("Congratulations!\n You won the game!");
-            setGameEnd(true);
+          if (message === "blue won the game!") {
+            setEndGameMessage("Blue team won the game!");
+          } else if (message === "red won the game!") {
+            setEndGameMessage("Red team won the game!");
           }
         } catch (error) {
           console.error(error);
@@ -564,11 +570,11 @@ const GamePage = () => {
                 <div className="overlay">
                   <div className='endgame'>
                     <h4>{endGameMessage}</h4>
-                    <p className="messageGame">Would you like to:</p>
+                    <p className="messageGame">press continue to go back the Home page:</p>
                     <button
                       className='endgameBtn'
                       onClick={() => navigate('/')}>
-                      Back home</button>
+                      Continue</button>
                   </div>
                 </div>
               ) : null}
