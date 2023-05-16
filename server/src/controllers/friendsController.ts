@@ -1,7 +1,14 @@
 import { app } from '..';
 import { authMiddleware } from '../middlewares/auth';
 import { DbService } from '../services/dbService';
-import { acceptGameInvite, delGame, inviteToGame, rejectGameInvite, setNewGame } from '../services/gameInviteService';
+import {
+  acceptGameInvite,
+  delGame,
+  inviteToGame,
+  makeAgame,
+  rejectGameInvite,
+  setNewGame,
+} from '../services/gameInviteService';
 import { addFriend, getDoc, getFriends, getUid, lose, win } from '../services/friendsService';
 
 export const friendsController = () => {
@@ -105,12 +112,11 @@ export const friendsController = () => {
     const answerVal = req.body?.answer as boolean;
     const friendUid = req.body?.friendUid as string;
     const currentUid = req.user.uid as string;
-
     if (answerVal) {
-      acceptGameInvite(currentUid, friendUid);
+      await acceptGameInvite(currentUid, friendUid);
     } else {
       try {
-        rejectGameInvite(friendUid, currentUid);
+        await rejectGameInvite(friendUid, currentUid);
       } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -121,6 +127,13 @@ export const friendsController = () => {
   app.post('/randomgame', authMiddleware, async (req: any, res) => {
     const uid = req.body?.inviter;
     setNewGame(uid);
+  });
+
+  app.post('/randomgame/match', authMiddleware, async (req: any, res) => {
+    const friendUid = req.body?.friendUid as string;
+    const currentUid = req.user.uid as string;
+      const gameKey = await makeAgame(currentUid, friendUid);
+      res.send(gameKey);
   });
 
   app.post('/delrandomgame', authMiddleware, async (req: any, res) => {

@@ -72,7 +72,27 @@ export const setNewGame = (userId: string) => {
   newGameRef.set("waiting");
 };
 
+export const makeAgame = async (currentUid: string, friendUid: string) => {
+  const newGameData = GameManagerFactory.getData(GameManagerFactory.initGameManager());
+
+  const gameDetails: IGameDetails = {
+    player1: {
+      id: currentUid,
+      team: team.red,
+      challenger: false,
+    },
+    player2: {
+      id: friendUid,
+      team: team.blue,
+      challenger: true,
+    },
+    game_data: newGameData,
+  };
+  await firebaseDb.ref(`games`).child(friendUid).set(gameDetails);
+  return friendUid;
+};
+
 export const delGame = (userId: string) => {
   const newGameRef = firebaseDb.ref(`waiting_games/${userId}`);
-  newGameRef.remove();
+  newGameRef.remove().then(r => null);
 };

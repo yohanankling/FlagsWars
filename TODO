@@ -1,5 +1,4 @@
 60 :
-TODO :: add random component game
 TODO :: delete game when finished
 TODO :: add name of inviter to game
 TODO :: add name of invited to game
@@ -11,3 +10,4 @@ TODO :: set scalability to server
 100:
 TODO :: add record game
 TODO :: add machine learning
+
