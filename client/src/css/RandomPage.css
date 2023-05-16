@@ -1,0 +1,33 @@
+.waiting-div{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vh;
+    height: 50vh;
+    border-radius: 1em;
+    background-color: white;
+    box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
+}
+
+.waiting-message{
+    text-align: center;
+}
+
+.Rspinner{
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    animation: spin 2s linear infinite;
+}
+
+.CancelBtn{
+    position: absolute;
+    top: 73%;
+    left: 33%;
+}

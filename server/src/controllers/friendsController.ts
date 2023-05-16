@@ -1,7 +1,7 @@
 import { app } from '..';
 import { authMiddleware } from '../middlewares/auth';
 import { DbService } from '../services/dbService';
-import { acceptGameInvite, inviteToGame, rejectGameInvite } from '../services/gameInviteService';
+import { acceptGameInvite, delGame, inviteToGame, rejectGameInvite, setNewGame } from '../services/gameInviteService';
 import { addFriend, getDoc, getFriends, getUid, lose, win } from '../services/friendsService';
 
 export const friendsController = () => {
@@ -117,4 +117,15 @@ export const friendsController = () => {
       }
     }
   });
+
+  app.post('/randomgame', authMiddleware, async (req: any, res) => {
+    const uid = req.body?.inviter;
+    setNewGame(uid);
+  });
+
+  app.post('/delrandomgame', authMiddleware, async (req: any, res) => {
+    const uid = req.body?.inviter;
+    delGame(uid);
+  });
 };
+

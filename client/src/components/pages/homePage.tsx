@@ -56,18 +56,18 @@ export const HomePage = () => {
         <button
           className="FriendsBtn"
           onClick={() => {navigate('/friends');}}>
-          Friends
+          Game invites
         </button>
         <button
           className="gameBtn"
           onClick={() => {navigate('/offline');}}>
           Flags Bot
         </button>
-        <button
-          className="scoreBtn"
-          onClick={() => {navigate('/scores');}}>
-          Tables
-        </button>
+          <button
+            className="RandomBtn"
+            onClick={() => {navigate('/random');}}>
+            Random opponent
+          </button>
           <button
             className="tutorialBtn"
             onClick={() => {navigate('/tutorial');}}>

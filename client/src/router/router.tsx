@@ -13,6 +13,7 @@ import { ProfilePage } from '../components/pages/profilePage';
 import { ContactPage } from '../components/pages/contactPage';
 import { BetaPage } from '../components/pages/BetaPage';
 import { TutorialPage } from '../components/pages/tutorialPage';
+import { RandomPage } from '../components/pages/RandomPage';
 
 export const AppRouter = () => {
   const [currentUser, setCurrentUser] = useState(auth.currentUser);
@@ -35,6 +36,7 @@ export const AppRouter = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/friends" element={<FriendsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/random" element={<RandomPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/beta" element={<BetaPage />} />
             <Route path="/game/:id" element={<GamePage />} />

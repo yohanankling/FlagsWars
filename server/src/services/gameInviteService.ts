@@ -66,3 +66,13 @@ export const inviteToGame = async (currentUid: string, friendUid: string) => {
 export const getGameInviteRefPath = (userId: string) => {
   return `game_invites/${userId}`;
 };
+
+export const setNewGame = (userId: string) => {
+  const newGameRef = firebaseDb.ref(`waiting_games/${userId}`);
+  newGameRef.set("waiting");
+};
+
+export const delGame = (userId: string) => {
+  const newGameRef = firebaseDb.ref(`waiting_games/${userId}`);
+  newGameRef.remove();
+};
