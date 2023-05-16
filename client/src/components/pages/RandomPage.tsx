@@ -116,7 +116,10 @@ export const RandomPage = () => {
           </div>
         ) : (
           <>
-          <Link to={'/game/' + gameId}>Join game</Link>
+            <div className='join'>
+              <h4 className='tip'>Opponent found!</h4>
+            <Link className='link' to={'/game/' + gameId}>Join the game</Link>
+            </div>
           </>)
         }
     </div>

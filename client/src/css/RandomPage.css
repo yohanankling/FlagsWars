@@ -31,3 +31,20 @@
     top: 73%;
     left: 33%;
 }
+
+.join{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30vh;
+    height: 20vh;
+    border-radius: 1em;
+    background-color: white;
+    box-shadow: 0 0.188em 1.550em rgb(156, 156, 156);
+}
+
+.link{
+    text-align: center;
+    margin-left: 37px;
+}
