@@ -2,7 +2,7 @@ import { app } from '..';
 import { authMiddleware } from '../middlewares/auth';
 import { DbService } from '../services/dbService';
 import {
-  acceptGameInvite,
+  acceptGameInvite, deleteInv,
   delGame,
   inviteToGame,
   makeAgame,
@@ -122,6 +122,11 @@ export const friendsController = () => {
         res.status(500).send(error);
       }
     }
+  });
+
+  app.post('/delinvitation', authMiddleware, async (req: any, res) => {
+    const uid = req.body?.uid as string;
+    await deleteInv(uid);
   });
 
   app.post('/randomgame', authMiddleware, async (req: any, res) => {

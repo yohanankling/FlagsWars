@@ -96,3 +96,8 @@ export const delGame = (userId: string) => {
   const newGameRef = firebaseDb.ref(`waiting_games/${userId}`);
   newGameRef.remove().then(r => null);
 };
+
+export const deleteInv = (userId: string) => {
+  const newGameRef = firebaseDb.ref(`game_invites/${userId}`);
+  newGameRef.remove().then(r => null);
+};

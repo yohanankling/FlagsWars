@@ -32,13 +32,11 @@ import { move, setReady, updateBoard } from '../../services/onlineGameSerivce';
 import React from 'react';
 import authService from '../../services/authService';
 import { send } from '../../services/httpContext';
-import firebase from 'firebase/compat';
 const contactImg = require('../../icons/contact.png');
 const logoutImg = require('../../icons/logout.png');
 const profileImg = require('../../icons/profile.png');
 const homeImg = require('../../icons/home.png');
 const board = require('../../icons/board.png');
-
 
 const child_blue = require('../../assets/child_blue.png');
 const child_red = require('../../assets/child_red.png');
@@ -475,7 +473,7 @@ const GamePage = () => {
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
           if (message === "blue won the game!") {
-            endgame(gameDetails.player1.id,gameDetails.player2.id)
+            endgame(gameDetails.player1.id,gameDetails.player2.id, gameDetails.player1.id,gameDetails.player2.id)
             setEndGameMessage("Blue team won the game!");
           } else if (message === "red won the game!") {
             setEndGameMessage("Red team won the game!");
@@ -601,9 +599,18 @@ const GamePage = () => {
   );
 };
 
-const endgame = async (winner:string, loser:string) => {
+const endgame = async (winner:string, loser:string, inviter: string, invited: string) => {
   const wonRes = await send({ method: 'POST', route: '/win', data: { uid: winner } });
   const loseRes = await send({ method: 'POST', route: '/lose', data: { uid: loser } });
-  };
+  try {
+    send({ method: 'POST', route: '/delinvitation', data: { uid: inviter } });
+  }catch (e){
+  }
+  try {
+    send({ method: 'POST', route: '/delinvitation', data: { uid: invited } });
+  }catch (e){
+  }
+
+};
 
 export default GamePage;
