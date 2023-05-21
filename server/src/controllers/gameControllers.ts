@@ -5,10 +5,39 @@ import { Entity, GameManagerFactory, IGameDetails, Position, Team, team } from '
 import { rejectGameInvite } from '../services/gameInviteService';
 import { Response } from 'express';
 import { updateGameData } from '../services/gameService';
+import { ref, get } from 'firebase/database';
+import { realTimeDb } from '../firebase';
 
 type moveType = 'set_ready' | 'exec_move' | 'update';
 
 export const gameController = () => {
+
+  app.post('/invites', async (req: any, res) => {
+    const uid = req.body.uid;
+    const starCountRef = ref(realTimeDb, 'game_invites/' + uid);
+    const snapshot = await get(starCountRef);
+    const data = snapshot.val();
+    const sentInvites = data?.sent;
+    const receivedInvites = data?.received;
+    res.json({
+      received: receivedInvites,
+      sent: sentInvites,
+    });
+  });
+
+  app.post('/games_listener', async (req, res) => {
+    try {
+      const id = req.body.id;
+      const gameRef = ref(realTimeDb, 'games/' + id);
+      const snapshot = await get(gameRef);
+      const data = snapshot.val();
+      res.send(JSON.stringify(data));
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
   app.delete('/game', async (req: any, res) => {
     const gameId = req.body.gameId;
     const game = (await firebaseDb.ref(`games/${gameId}`).get()).val();
@@ -123,7 +152,6 @@ export const gameController = () => {
           }
           break;
       }
-
       res.send(200);
     },
   );

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../css/FriendsPage.css';
-import { auth, realTimeDb } from '../../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { send } from '../../services/httpContext';
-import { ref, onValue } from 'firebase/database';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
-
 const contactImg = require('../../icons/contact.png');
 const logoutImg = require('../../icons/logout.png');
 const profileImg = require('../../icons/profile.png');
@@ -27,27 +25,31 @@ export const FriendsPage = () => {
   });
   const thisUser = auth.currentUser;
   let thisName = thisUser.displayName;
-  const listenToGameInvites = () => {
-    const starCountRef = ref(realTimeDb, 'game_invites/' + auth.currentUser?.uid);
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
-      const sentInvites = data?.sent;
-      const receivedInvites = data?.received;
-      setGameInvites({
-        received: receivedInvites,
-        sent: sentInvites,
-      });
-    });
+
+  const listenToGameInvites = async () => {
+    const response = await send({ method: 'POST', route: '/invites', data: { uid: auth.currentUser?.uid } });
+    setGameInvites(response.data);
   };
+  listenToGameInvites();
+
+  const gameInvitesRef = useRef(null);
+
+  useEffect(() => {
+    if (gameInvitesRef.current) {
+      gameInvitesRef.current.on('change', () => {
+        setGameInvites(gameInvitesRef.current.data);
+      });
+    }
+  }, [gameInvitesRef]);
 
   const generateTotalGameInvites = () => {
     const totalGameInvites = [];
 
     for (const key in gameInvites.received) {
-      console.log(`${key}: ${gameInvites.received[key]}`);
+      // const res = await send({ method: 'POST', route: '/getdoc', data: { uid: key } });
       totalGameInvites.push({
         status: gameInvites.received[key].status,
-        // email: gameInvites.received[i].fromEmail,
+        // name: res.data.displayName,
         id: key,
         sentByYou: false,
         gameId: gameInvites.received[key].gameId,
@@ -55,7 +57,6 @@ export const FriendsPage = () => {
     }
 
     for (const key in gameInvites.sent) {
-      console.log(`${key}: ${gameInvites.sent[key]}`);
       totalGameInvites.push({
         status: gameInvites.sent[key].status,
         // email: gameInvites.received[i].fromEmail,
