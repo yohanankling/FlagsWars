@@ -8,7 +8,7 @@ import admin from 'firebase-admin';
 import { registerControllers } from './controllers/registerControllers';
 import { getDatabase } from 'firebase-admin/database';
 
-var serviceAccount = require('../flagswar-2576b-firebase-adminsdk-l3z5a-7109daaf8a.json');
+const serviceAccount = require('../flagswar.json');
 
 const firebaseApp = initializeApp({
   credential: admin.credential.cert(serviceAccount),
