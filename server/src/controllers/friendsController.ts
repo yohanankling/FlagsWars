@@ -128,6 +128,7 @@ export const friendsController = () => {
   app.post('/delinvitation', authMiddleware, async (req: any, res) => {
     const uid = req.body?.uid as string;
     await deleteInv(uid);
+    res.send();
   });
 
   app.post('/waiting_games', authMiddleware, async (req: any, res) => {
@@ -143,7 +144,10 @@ export const friendsController = () => {
       const id = req.query.id;
       const gameRef = admin.database().ref('waiting_games/' + id);
       gameRef.on('value', (snapshot) => {
-        const data = snapshot.val();
+        let data = snapshot.val();
+        if (data === null){
+          data = "empty";
+        }
         res.write('event: message\n');
         res.write('data: ' + JSON.stringify(data) + '\n\n');
         req.on('close', () => {
@@ -159,6 +163,7 @@ export const friendsController = () => {
   app.post('/randomgame', authMiddleware, async (req: any, res) => {
     const uid = req.body?.inviter;
     setNewGame(uid);
+    res.send();
   });
 
   app.post('/randomgame/match', authMiddleware, async (req: any, res) => {
@@ -172,6 +177,7 @@ export const friendsController = () => {
   app.post('/delrandomgame', authMiddleware, async (req: any, res) => {
     const uid = req.body?.inviter;
     delGame(uid);
+    res.send();
   });
 };
 

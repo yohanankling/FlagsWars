@@ -36,6 +36,15 @@ export const RandomPage = () => {
       } else {
         try {
           await send({ method: 'POST', route: '/randomgame', data: { inviter: auth.currentUser?.uid } });
+          const eventSource = new EventSource(`http://localhost:3001/waiting_games_listener?id=${auth.currentUser?.uid}`);
+          eventSource.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            console.log(data)
+            if (data === "empty") {
+              setGameId(auth.currentUser?.uid);
+              setIsWaiting(false);
+            }
+          });
         } catch (error) {
           console.error(error);
         }
@@ -45,20 +54,8 @@ export const RandomPage = () => {
     }
   };
 
-  const listenToGameMatch = () => {
-    const eventSource = new EventSource(`http://localhost:3001/waiting_games_listener?id=${auth.currentUser?.uid}`);
-    eventSource.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data)
-      if (data) {
-        setGameId(auth.currentUser?.uid);
-        setIsWaiting(false);
-      }
-    });
-  };
-
   useEffect(() => {
-    handleRandomOpponent().then(r => listenToGameMatch());
+    handleRandomOpponent();
   }, []);
 
     return (
