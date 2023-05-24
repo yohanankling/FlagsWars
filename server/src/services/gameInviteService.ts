@@ -97,7 +97,13 @@ export const delGame = (userId: string) => {
   newGameRef.remove().then(r => null);
 };
 
+export const getWaitingGames = async () => {
+  const snapshot = await firebaseDb.ref(`waiting_games`).once('value');
+  return snapshot.val();
+};
+
 export const deleteInv = (userId: string) => {
   const newGameRef = firebaseDb.ref(`game_invites/${userId}`);
   newGameRef.remove().then(r => null);
 };
+

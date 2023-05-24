@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../css/RandomPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
-import { ref, onValue, get, getDatabase } from 'firebase/database';
-import { realTimeDb, auth } from '../../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { send } from '../../services/httpContext';
 const contactImg = require('../../icons/contact.png');
 const logoutImg = require('../../icons/logout.png');
@@ -20,11 +19,11 @@ export const RandomPage = () => {
 
   const handleRandomOpponent = async () => {
     try {
-      const waitingGamesRef = ref(getDatabase(), 'waiting_games');
-      const snapshot = await get(waitingGamesRef);
-      const waitingGames = snapshot.val();
-      if (waitingGames) {
-        const gameIds = Object.keys(waitingGames);
+      const res = await send({ method: 'POST', route: '/waiting_games'});
+      const data = res.data;
+      console.log(data)
+      if (data) {
+        const gameIds = Object.keys(data);
         const opponentUid = gameIds[0];
         try {
          const res = await send({ method: 'POST', route: '/randomgame/match', data: { friendUid: opponentUid } });
@@ -47,9 +46,10 @@ export const RandomPage = () => {
   };
 
   const listenToGameMatch = () => {
-    const starCountRef = ref(realTimeDb, 'games/' + auth.currentUser?.uid);
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
+    const eventSource = new EventSource(`http://localhost:3001/waiting_games_listener?id=${auth.currentUser?.uid}`);
+    eventSource.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data);
+      console.log(data)
       if (data) {
         setGameId(auth.currentUser?.uid);
         setIsWaiting(false);
@@ -58,8 +58,7 @@ export const RandomPage = () => {
   };
 
   useEffect(() => {
-    handleRandomOpponent();
-    listenToGameMatch();
+    handleRandomOpponent().then(r => listenToGameMatch());
   }, []);
 
     return (

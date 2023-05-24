@@ -187,7 +187,6 @@ const GamePage = () => {
       setGameDetails(gameDetails);
       setGameManager(GameManagerFactory.restoreGame(data.game_data));
       if (!initialLoad) setInitialLoad(true);
-      console.log('Received data:', data);
     });
   };
 

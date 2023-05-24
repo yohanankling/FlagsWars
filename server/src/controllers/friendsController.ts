@@ -3,13 +3,14 @@ import { authMiddleware } from '../middlewares/auth';
 import { DbService } from '../services/dbService';
 import {
   acceptGameInvite, deleteInv,
-  delGame,
+  delGame, getWaitingGames,
   inviteToGame,
   makeAgame,
   rejectGameInvite,
   setNewGame,
 } from '../services/gameInviteService';
 import { addFriend, getDoc, getFriends, getUid, lose, win } from '../services/friendsService';
+import admin from 'firebase-admin';
 
 export const friendsController = () => {
   app.post('/getuid', authMiddleware, async (req: any, res) => {
@@ -129,6 +130,32 @@ export const friendsController = () => {
     await deleteInv(uid);
   });
 
+  app.post('/waiting_games', authMiddleware, async (req: any, res) => {
+    res.send(await getWaitingGames());
+  });
+
+  app.get('/waiting_games_listener', async (req, res) => {
+    try {
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      const id = req.query.id;
+      const gameRef = admin.database().ref('waiting_games/' + id);
+      gameRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        res.write('event: message\n');
+        res.write('data: ' + JSON.stringify(data) + '\n\n');
+        req.on('close', () => {
+          gameRef.off();
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred');
+    }
+  });
+
   app.post('/randomgame', authMiddleware, async (req: any, res) => {
     const uid = req.body?.inviter;
     setNewGame(uid);
@@ -140,6 +167,7 @@ export const friendsController = () => {
       const gameKey = await makeAgame(currentUid, friendUid);
       res.send(gameKey);
   });
+
 
   app.post('/delrandomgame', authMiddleware, async (req: any, res) => {
     const uid = req.body?.inviter;
