@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ref, onValue } from 'firebase/database';
-import { realTimeDb, auth } from '../../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import '../../css/game.css';
@@ -181,13 +180,14 @@ const GamePage = () => {
   }, []);
 
   const listenForGame = () => {
-    const starCountRef = ref(realTimeDb, 'games/' + id);
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
-      const gameDetails = { player1: data.player1, player2: data.player2, redPlayer: data.red_player };
+    const eventSource = new EventSource(`http://localhost:3001/games_listener?id=${id}`);
+    eventSource.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data);
+      const gameDetails = { player1: data.player1, player2: data.player2, redPlayer: data.red_player, bluePlayer: data.blue_player };
       setGameDetails(gameDetails);
       setGameManager(GameManagerFactory.restoreGame(data.game_data));
       if (!initialLoad) setInitialLoad(true);
+      console.log('Received data:', data);
     });
   };
 

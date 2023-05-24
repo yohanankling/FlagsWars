@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { updateGameData } from '../services/gameService';
 import { ref, get } from 'firebase/database';
 import { realTimeDb } from '../firebase';
+import admin from 'firebase-admin';
 
 type moveType = 'set_ready' | 'exec_move' | 'update';
 
@@ -25,16 +26,25 @@ export const gameController = () => {
     });
   });
 
-  app.post('/games_listener', async (req, res) => {
+  app.get('/games_listener', async (req, res) => {
     try {
-      const id = req.body.id;
-      const gameRef = ref(realTimeDb, 'games/' + id);
-      const snapshot = await get(gameRef);
-      const data = snapshot.val();
-      res.send(JSON.stringify(data));
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      const id = req.query.id;
+      const gameRef = admin.database().ref('games/' + id);
+      gameRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+      res.write('event: message\n');
+      res.write('data: ' + JSON.stringify(data) + '\n\n');
+      req.on('close', () => {
+        gameRef.off();
+      });
+      });
     } catch (error) {
       console.error(error);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send('An error occurred');
     }
   });
 

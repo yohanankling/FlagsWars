@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../css/RandomPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
-import { ref, onValue, get, push, getDatabase } from 'firebase/database';
+import { ref, onValue, get, getDatabase } from 'firebase/database';
 import { realTimeDb, auth } from '../../firebase/firebase';
 import { send } from '../../services/httpContext';
 const contactImg = require('../../icons/contact.png');
@@ -20,7 +20,6 @@ export const RandomPage = () => {
 
   const handleRandomOpponent = async () => {
     try {
-      // Check if there is a waiting game in the database
       const waitingGamesRef = ref(getDatabase(), 'waiting_games');
       const snapshot = await get(waitingGamesRef);
       const waitingGames = snapshot.val();
@@ -56,7 +55,6 @@ export const RandomPage = () => {
         setIsWaiting(false);
       }
     });
-
   };
 
   useEffect(() => {
