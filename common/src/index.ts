@@ -96,7 +96,7 @@ export class Entity {
   public level: number;
 
   constructor() {
-    this.isVisible = true;
+    this.isVisible = false;
   }
 
   public getPosition(board: Board): Position | null {
@@ -639,17 +639,17 @@ export class GameManagerFactory {
     instance.setupFinished = false;
     instance.blueTeam = new Team(team.blue, 0, 1);
     instance.redTeam = new Team(team.red, 7, 6);
-    // instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    // instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
-    instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 1, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
-    instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 1, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
+    instance.blueTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    instance.redTeam.piecesSetup = {death:1, devil: 1, dwarf:1, flag: 1, knight:0, mommy: 1, ninja:1, odin:0, thor: 0, troll:1, viking:0, wizard: 1, child: 0 };
+    // instance.redTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 1, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
+    // instance.blueTeam.piecesSetup = {death:0, devil: 0, dwarf:0, flag: 1, knight:0, mommy: 0, ninja:0, odin:0, thor: 0, troll:0, viking:0, wizard: 0, child: 0 };
 
     instance.turnCount = 0;
     instance.teamTurn = instance.redTeam;
     instance.endgame = "none";
 
     for (let i = 0; i < 8; i++) {
-      instance.board.getCell(i, 3).entity = new Flag(team.red);
+      instance.board.getCell(i, 6).entity = new Child(team.red);
     }
 
     for (let i = 0; i < 8; i++) {
