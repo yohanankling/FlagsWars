@@ -90,7 +90,7 @@ export const ContactPage = () => {
                     <a
                       className='link'
                       target="_blank"
-                    href="https://drive.google.com/file/d/1el9dCExmLQ_axgGPGSJBs0PbledH1HWi/view">
+                    href="https://drive.google.com/file/d/1LZBgNf3Vjh980OS-Yy4iSQWroJ5YGGzq/view">
                       <img src={cv} alt="CV Logo" />
                     </a>
               </div>

@@ -60,6 +60,11 @@ img {
     height: 20px;
 }
 
-.buttons {
+.buttonss {
+    margin-top: 270px;
+    margin-left: 90px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    grid-gap: 30px;
 }
 

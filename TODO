@@ -1,11 +1,10 @@
-60 :
+60:
 TODO :: add name of inviter to game
 TODO :: add name of invited to game
 TODO :: move login and register to server-side
-TODO :: q.a game
 
 80:
-TODO :: set scalability to server
+TODO :: set scalability to server VX
 
 100:
 TODO :: add record game

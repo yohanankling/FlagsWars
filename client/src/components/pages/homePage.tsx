@@ -52,7 +52,7 @@ export const HomePage = () => {
           </div>
         </div>
         <h4 className='title'> menu </h4>
-        <div className='buttons'>
+        <div className='buttonss'>
         <button
           className="FriendsBtn"
           onClick={() => {navigate('/friends');}}>

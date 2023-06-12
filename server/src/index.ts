@@ -1,5 +1,7 @@
-import express from 'express';
+import express, { Application } from 'express';
 const cors = require('cors');
+import cluster from 'cluster';
+import os from 'os';
 
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -19,30 +21,47 @@ export const auth = admin.auth();
 export const firestoreDb = getFirestore(firebaseApp);
 export const firebaseDb = getDatabase(firebaseApp);
 
-export const app = express();
+const numCPUs = os.cpus().length;
 
-app.use(
-  cors({
-    origin: '*',
-  }),
-);
+let app: Application;
 
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-);
+if (cluster.isPrimary) {
+  console.log(`Master ${process.pid} is running`);
 
-app.use(express.json());
+  for (let i = 0; i < numCPUs-1; i++) {
+    cluster.fork();
+  }
 
-registerControllers(); 
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+    cluster.fork();
+  });
+} else {
+  app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+  app.use(
+    cors({
+      origin: '*',
+    }),
+  );
 
-app.listen(3001, () => {
-  console.log('Server listening on port 3001');
-});
+  app.use(
+    express.urlencoded({
+      extended: true,
+    }),
+  );
 
+  app.use(express.json());
 
+  registerControllers();
+
+  app.get('/', (req, res) => {
+    res.send('Hello World');
+  });
+
+  app.listen(3001, () => {
+    console.log(`Worker ${process.pid} listening on port 3001`);
+  });
+}
+
+export { app };
