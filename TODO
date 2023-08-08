@@ -3,9 +3,6 @@ TODO :: add name of inviter to game
 TODO :: add name of invited to game
 TODO :: move login and register to server-side
 
-80:
-TODO :: set scalability to server VX
-
 100:
 TODO :: add record game
 TODO :: add machine learning

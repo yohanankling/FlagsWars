@@ -58,7 +58,7 @@ button {
     grid-template-columns: 1fr 1fr;
     grid-gap: 50%;
     position: absolute;
-    left: 20%;
-    bottom: 5%;
+    left: 15%;
+    bottom: 2%;
 }
 

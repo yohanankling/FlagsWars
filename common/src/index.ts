@@ -96,7 +96,7 @@ export class Entity {
   public level: number;
 
   constructor() {
-    this.isVisible = false;
+    this.isVisible = true;
   }
 
   public getPosition(board: Board): Position | null {
