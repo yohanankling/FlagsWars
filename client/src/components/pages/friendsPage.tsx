@@ -40,8 +40,15 @@ export const FriendsPage = () => {
         setGameInvites(gameInvitesRef.current.data);
       });
     }
-  }, [gameInvitesRef]);
 
+    return () => {
+      if (gameInvitesRef.current) {
+        gameInvitesRef.current.removeListener('change', () => {
+          setGameInvites(gameInvitesRef.current.data);
+        });
+      }
+    };
+  }, [gameInvitesRef]);
   const generateTotalGameInvites = () => {
     const totalGameInvites = [];
 
@@ -110,7 +117,7 @@ export const FriendsPage = () => {
       };
 
       return (
-        <li>
+        <li key={game.id}>
           {gameStatusHandler()}
         </li>
       );

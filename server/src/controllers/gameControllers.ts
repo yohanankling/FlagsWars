@@ -162,7 +162,7 @@ export const gameController = () => {
           }
           break;
       }
-      res.send(200);
+      res.sendStatus(200);
     },
   );
 };

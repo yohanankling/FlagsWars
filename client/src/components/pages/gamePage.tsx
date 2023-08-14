@@ -168,7 +168,7 @@ const GamePage = () => {
       fetchUid = gameDetails.player2.id;
     }
     try {
-      const res = await send({ method: 'POST', route: '/getDoc', data: { uid: fetchUid } });
+      const res = await send({ method: 'POST', route: '/getDoc', data: {uid: fetchUid} });
       let doc = res.data;
       setVsName(doc.name);
     } catch (error: any) {
@@ -511,7 +511,8 @@ const GamePage = () => {
       <div className={"cover"}>
         <>
           <div className='navbar'>
-            <h4 className='name'>{name} vs {vsName}</h4>
+            {/*<h4 className='name'>{name} vs {vsName}</h4>*/}
+            <h4 className='name'>     </h4>
             <div className='navbarBtns'>
               <button className='homeBtn'
                       onClick={() => {
