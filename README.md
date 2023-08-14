@@ -11,6 +11,11 @@ The goal of this project is to provide a platform where users can log in their a
 Also users can play against random players or against a basic AI.
 The application also allows users to view their profiles and track the number of wins and losses.
 
+## Screenshots:
+ <p align="center">
+ <img src="https://github.com/yohanankling/FlagsWars/assets/93263233/aa8a5777-90d0-43bd-b0d1-9241284b1334" width="230" height="260">  <img src="https://github.com/yohanankling/FlagsWars/assets/93263233/bb9349f2-e562-4baf-9f16-161a3bd2c7cc" width="230" height="260">  <img src="https://github.com/yohanankling/FlagsWars/assets/93263233/905d39ac-25f8-41e7-ba54-172982474e54" width="230" height="260"> <br/>  <img src="https://github.com/yohanankling/FlagsWars/assets/93263233/2695ca1a-1ee0-4a52-be72-199a361708c7" width="230" height="260">  <img src="https://github.com/yohanankling/FlagsWars/assets/93263233/7c184a64-9025-4672-a074-9bb42f3fa430" width="230" height="260">  <img src="https://github.com/yohanankling/FlagsWars/assets/93263233/c9a286d8-fafd-4a6e-a4f3-cf1ae9f90845" width="230" height="260">  
+  </p>
+
 ## Features
 
 - User authentication register,login functionality.
