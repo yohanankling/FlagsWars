@@ -26,9 +26,9 @@ export const RandomPage = () => {
         const gameIds = Object.keys(data);
         const opponentUid = gameIds[0];
         try {
-         const res = await send({ method: 'POST', route: '/randomgame/match', data: { friendUid: opponentUid } });
-         setGameId(res.data);
-         send({ method: 'POST', route: '/delrandomgame', data: { inviter: opponentUid } });
+          const res = await send({ method: 'POST', route: '/randomgame/match', data: { friendUid: opponentUid } });
+          setGameId(res.data);
+          send({ method: 'POST', route: '/delrandomgame', data: { inviter: opponentUid } });
           setIsWaiting(false);
         } catch (error) {
           console.error(error);
@@ -58,7 +58,7 @@ export const RandomPage = () => {
     handleRandomOpponent();
   }, []);
 
-    return (
+  return (
     <div className={'background'}>
       <img className={'background'} src={board} alt={'background'} />
       <div className='cover'>
@@ -93,8 +93,8 @@ export const RandomPage = () => {
               </button>
             </div>
           </div>
-          </>
-          <h4 className='title'> Random opponents </h4>
+        </>
+        <h4 className='title'> Random opponents </h4>
         <div className='random'> </div>
         {isWaiting ? (
           <div className='waiting-div'>
@@ -112,11 +112,11 @@ export const RandomPage = () => {
           <>
             <div className='join'>
               <h4 className='tip'>Opponent found!</h4>
-            <Link className='link' to={'/game/' + gameId}>Join the game</Link>
+              <Link className='link' to={'/game/' + gameId}>Join the game</Link>
             </div>
           </>)
         }
-    </div>
+      </div>
     </div>
   );
 };

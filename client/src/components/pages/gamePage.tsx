@@ -468,7 +468,8 @@ const GamePage = () => {
         }
         try {
           let message = await move(id, { x: selectedEntity.x, y: selectedEntity.y }, { x: cell.x, y: cell.y });
-          setGameMessage(message);
+          if (!message){
+            setGameMessage(message);}
           setSelectedEntity(null);
           setHighlightBoard(new MarkerBoard());
           if (message === "blue won the game!") {

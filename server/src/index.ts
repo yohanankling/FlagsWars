@@ -24,6 +24,7 @@ export const firebaseDb = getDatabase(firebaseApp);
 const numCPUs = os.cpus().length;
 
 let app: Application;
+process.on('warning', e => console.warn(e.stack));
 
 if (cluster.isPrimary) {
   console.log(`Master ${process.pid} is running`);
